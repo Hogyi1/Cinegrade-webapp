@@ -1,16 +1,65 @@
-# Compiled class file
-*.class
-
-# Log file
+# =========================================================
+#  General / OS
+# =========================================================
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
 *.log
+logs/
+tmp/
+temp/
 
-# BlueJ files
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# =========================================================
+#  IDEs
+# =========================================================
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Eclipse / Spring Tool Suite
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache/
+.apt_generated/
+bin/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code (keep shared recommended settings)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# =========================================================
+#  Backend — Java / Spring Boot (Maven & Gradle)
+# =========================================================
+*.class
 *.ctxt
-
-# Mobile Tools for Java (J2ME)
 .mtj.tmp/
+hs_err_pid*
+replay_pid*
 
-# Package Files #
+# Packaged files
 *.jar
 *.war
 *.nar
@@ -19,6 +68,64 @@
 *.tar.gz
 *.rar
 
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+# Maven
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# Gradle
+.gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Spring Boot local overrides (keep the main application.properties/yml)
+application-local.properties
+application-local.yml
+
+# =========================================================
+#  Frontend — Angular / Node
+# =========================================================
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# Build output
+frontend/dist/
+frontend/tmp/
+frontend/out-tsc/
+frontend/bazel-out/
+
+# Angular cache
+.angular/
+.sass-cache/
+
+# Test / coverage
+coverage/
+.nyc_output/
+/libpeerconnection.log
+testem.log
+/typings
+
+# Node debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Misc
+connect.lock
