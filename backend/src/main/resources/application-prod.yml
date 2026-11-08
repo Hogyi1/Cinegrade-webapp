@@ -1,0 +1,10 @@
+# Éles (szerveren futó) környezet beállításai.
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: false
+
+logging:
+  level:
+    root: INFO

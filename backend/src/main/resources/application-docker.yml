@@ -1,0 +1,7 @@
+# Akkor aktív, ha a backend Docker konténerben fut (a compose.yml kapcsolja be).
+# Konténeren belül a többi szolgáltatás a nevén érhető el, nem localhoston.
+DB_HOST: db
+
+spring:
+  mail:
+    host: ${MAIL_HOST_IN_DOCKER:${MAIL_HOST}}
