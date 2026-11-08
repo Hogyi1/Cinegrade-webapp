@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RegistrationRequest } from '../../services/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -9,7 +9,9 @@ import { AuthenticationService } from '../../services/services';
   selector: 'app-register',
   imports: [CommonModule, FormsModule],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
+  // Angular 22 alapból OnPush: enélkül a HTTP válasz után nem frissül a képernyő
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class RegisterComponent {
   registerRequest: RegistrationRequest = {
@@ -34,7 +36,8 @@ export class RegisterComponent {
         this.router.navigate(['activate-account']);
       },
       error: (err) => {
-        this.errorMsg = err.error.validationErrors;
+        this.errorMsg = err.error?.validationErrors
+          ?? [err.error?.businessErrorDescription ?? err.error?.error ?? 'Registration failed, please try again'];
       }
     })
   }

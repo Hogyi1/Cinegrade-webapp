@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import type { AuthenticationRequest } from '../../services/models';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,7 +10,9 @@ import { TokenService } from '../../services/token/token.service';
   selector: 'app-login',
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
+  // Angular 22 alapból OnPush: enélkül a HTTP válasz után nem frissül a képernyő
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class LoginComponent {
 

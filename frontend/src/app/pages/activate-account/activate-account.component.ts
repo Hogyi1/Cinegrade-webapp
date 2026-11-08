@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthenticationService } from '../../services/services';
 import { Router } from '@angular/router';
 import { CodeInputModule } from 'angular-code-input';
@@ -9,7 +9,9 @@ import { CommonModule } from '@angular/common';
   selector: 'app-activate-account',
   imports: [CodeInputModule, CommonModule],
   templateUrl: './activate-account.component.html',
-  styleUrl: './activate-account.component.css'
+  styleUrl: './activate-account.component.css',
+  // Angular 22 alapból OnPush: enélkül a HTTP válasz után nem frissül a képernyő
+  changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ActivateAccountComponent {
 
