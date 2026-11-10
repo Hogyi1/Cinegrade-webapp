@@ -9,24 +9,26 @@ import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
 
-export interface Confirm$Params {
-  token: string;
+export interface Download$Params {
+  id: number;
+  kind: string;
 }
 
-export function confirm(http: HttpClient, rootUrl: string, params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-  const rb = new RequestBuilder(rootUrl, confirm.PATH, 'get');
+export function download(http: HttpClient, rootUrl: string, params: Download$Params, context?: HttpContext): Observable<StrictHttpResponse<Blob>> {
+  const rb = new RequestBuilder(rootUrl, download.PATH, 'get');
   if (params) {
-    rb.query('token', params.token, {});
+    rb.path('id', params.id, {});
+    rb.path('kind', params.kind, {});
   }
 
   return http.request(
-    rb.build({ responseType: 'text', accept: '*/*', context })
+    rb.build({ responseType: 'blob', accept: 'application/json', context })
   ).pipe(
     filter((r: any): r is HttpResponse<any> => r instanceof HttpResponse),
     map((r: HttpResponse<any>) => {
-      return (r as HttpResponse<any>).clone({ body: undefined }) as StrictHttpResponse<void>;
+      return r as StrictHttpResponse<Blob>;
     })
   );
 }
 
-confirm.PATH = '/auth/activate-account';
+download.PATH = '/{id}/download/{kind}';

@@ -1,28 +1,83 @@
-<div class="container" *ngIf="submitted else codeForm">
-  <div class="activate-message" *ngIf="isOkay else activationError">
-    <h2>Activation succesful</h2>
-    <p>Your account has been activated succesfully!</p>
-    <button class="btn btn-primary" (click)="redirectToLogin()">Go to login</button>
-  </div>
-</div>
+<main class="auth-card" [class.auth-card--busy]="submitting()">
+  <section class="brand">
+    <img class="logo" src="images/whole-cine-logo.png" alt="CineGrade" width="512" height="170" />
+    <h1 class="title">Activate your account</h1>
+  </section>
 
-<ng-template #codeForm>
+  <section class="panel">
+    @if (errorMsg().length) {
+      <div class="notice" role="alert">
+        @for (msg of errorMsg(); track msg) {
+          <p>{{ msg }}</p>
+        }
+      </div>
+    }
+    @if (resent()) {
+      <div class="notice notice--ok" role="status">
+        <p>If that email is waiting for activation, a new code is on its way.</p>
+      </div>
+    }
 
-  <div class="container">
-    <div class="text-center" style="width: 400px;">
-      <h2>Type your activation code</h2>
-      <code-input [isCodeHidden]="false" [codeLength]="6" [code]="'number'" (codeCompleted)="onCodeCompleted($event)">
+    <form class="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input
+          class="input"
+          [class.input--invalid]="emailError()"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          autocapitalize="none"
+          spellcheck="false"
+          [(ngModel)]="email"
+          [attr.aria-invalid]="emailError() ? 'true' : null"
+          [attr.aria-describedby]="emailError() ? 'email-error' : null"
+        />
+        @if (emailError()) {
+          <p class="field-error" id="email-error">{{ emailError() }}</p>
+        }
+      </div>
 
-      </code-input>
-    </div>
-  </div>
+      <div class="field">
+        <label class="label" for="code">Activation code</label>
+        <input
+          class="input input--code"
+          [class.input--invalid]="codeError()"
+          id="code"
+          name="code"
+          type="text"
+          inputmode="numeric"
+          autocomplete="one-time-code"
+          maxlength="6"
+          [value]="code()"
+          (input)="onCodeInput($event)"
+          [attr.aria-invalid]="codeError() ? 'true' : null"
+          aria-describedby="code-message"
+        />
+        <div id="code-message">
+          @if (codeError()) {
+            <p class="field-error">{{ codeError() }}</p>
+          } @else {
+            <p class="hint">The 6 digits from the email we sent you.</p>
+          }
+        </div>
+      </div>
 
-</ng-template>
-
-<ng-template #activationError>
-  <div class="activation-error">
-    <h2>Activation failed</h2>
-    <p>{{message}}</p>
-    <button class="btn btn-primary" (click)="submitted = false">Try Again</button>
-  </div>
-</ng-template>
+      <div class="actions">
+        <button class="submit" type="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+            Activating
+          } @else {
+            Activate account
+          }
+        </button>
+        <p class="switch">
+          No code?
+          <button class="link" type="button" [disabled]="resending()" (click)="resend()">Send a new code</button>
+        </p>
+      </div>
+    </form>
+  </section>
+</main>

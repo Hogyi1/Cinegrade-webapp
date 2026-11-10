@@ -1,36 +1,132 @@
-<div class="container-fluid card login-container">
-  <h3 class="text-center">Create an account</h3>
-  <hr>
-  <div class="alert alert-danger" role="alert" *ngIf="errorMsg.length">
-    <p *ngFor="let msg of errorMsg">{{msg}}</p>
-  </div>
-  <div class="mb-3">
-    <label class="form-label" for="firstname">Firstname</label>
-    <input [(ngModel)]="registerRequest.firstName" type="text" name="firstName" class="form-control" id="firstName" placeholder="Hogyor">
-  </div>
-  <div class="mb-3">
-    <label class="form-label" for="lastName">Lastname</label>
-    <input [(ngModel)]="registerRequest.lastName" type="lastName" name="lastName" class="form-control" id="lastName" placeholder="Péter">
-  </div>
-  <div class="mb-3">
-    <label class="form-label" for="email">Email</label>
-    <input [(ngModel)]="registerRequest.email" type="email" name="email" class="form-control" id="email" placeholder="example@mail.com">
-  </div>
-  <div class="mb-3">
-    <label class="form-label" for="password">Password</label>
-    <input [(ngModel)]="registerRequest.password" type="password" name="password" class="form-control" id="password" placeholder="secret1">
-  </div>
-  <div>
-    <div class="d-flex justify-content-between mb-3">
-      <button (click)="register()" type="button" class="btn btn-primary">
-        <em class="fas fa-sign-in-alt">&nbsp;Register account</em>
-      </button>
-    </div>
-    <div>
-      Already have an account? &nbsp;
-      <button (click)="login()" type="button" class="btn btn-link">
-        <em class="fas fa-login-in-alt">&nbsp;Login</em>
-      </button>
-    </div>
-  </div>
-</div>
+<main class="auth-card auth-card--wide" [class.auth-card--busy]="submitting()">
+  <section class="brand">
+    <img class="logo" src="images/whole-cine-logo.png" alt="CineGrade" width="512" height="170" />
+    <h1 class="title">Create your account</h1>
+  </section>
+
+  <section class="panel">
+
+    @if (errorMsg().length) {
+      <div class="notice" role="alert">
+        @for (msg of errorMsg(); track msg) {
+          <p>{{ msg }}</p>
+        }
+      </div>
+    }
+
+    <form class="form form--two-columns" (ngSubmit)="submit()">
+      <div class="field">
+        <label class="label" for="username">Username</label>
+        <input
+          class="input"
+          [class.input--invalid]="usernameError()"
+          id="username"
+          name="username"
+          type="text"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+          maxlength="30"
+          [ngModel]="username()"
+          (ngModelChange)="onUsernameChange($event)"
+          [attr.aria-invalid]="usernameError() ? 'true' : null"
+          aria-describedby="username-message"
+        />
+        <div id="username-message" aria-live="polite">
+          @if (usernameError()) {
+            <p class="field-error">{{ usernameError() }}</p>
+          } @else if (usernameStatus() === 'available') {
+            <p class="field-success">That username is available.</p>
+          } @else if (usernameStatus() === 'checking') {
+            <p class="hint">Checking that username.</p>
+          } @else {
+            <p class="hint">{{ usernameRule }}</p>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="email">Email</label>
+        <input
+          class="input"
+          [class.input--invalid]="emailError()"
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          autocapitalize="none"
+          spellcheck="false"
+          [(ngModel)]="email"
+          [attr.aria-invalid]="emailError() ? 'true' : null"
+          [attr.aria-describedby]="emailError() ? 'email-error' : null"
+        />
+        @if (emailError()) {
+          <p class="field-error" id="email-error">{{ emailError() }}</p>
+        }
+      </div>
+
+      <div class="field">
+        <label class="label" for="password">Password</label>
+        <div class="password">
+          <input
+            class="input input--with-toggle"
+            [class.input--invalid]="passwordError()"
+            id="password"
+            name="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            autocomplete="new-password"
+            [(ngModel)]="password"
+            [attr.aria-invalid]="passwordError() ? 'true' : null"
+            aria-describedby="password-message"
+          />
+          <button
+            class="toggle"
+            type="button"
+            (click)="togglePassword()"
+            [attr.aria-pressed]="showPassword()"
+            aria-label="Show password"
+          >
+            <i class="fas" [class.fa-eye]="!showPassword()" [class.fa-eye-slash]="showPassword()" aria-hidden="true"></i>
+          </button>
+        </div>
+        <div id="password-message">
+          @if (passwordError()) {
+            <p class="field-error">{{ passwordError() }}</p>
+          } @else {
+            <p class="hint">At least 8 characters, including 2 numbers and 1 special character.</p>
+          }
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label" for="confirm-password">Password again</label>
+        <input
+          class="input"
+          [class.input--invalid]="confirmPasswordError()"
+          id="confirm-password"
+          name="confirmPassword"
+          [type]="showPassword() ? 'text' : 'password'"
+          autocomplete="new-password"
+          [(ngModel)]="confirmPassword"
+          [attr.aria-invalid]="confirmPasswordError() ? 'true' : null"
+          [attr.aria-describedby]="confirmPasswordError() ? 'confirm-password-error' : null"
+        />
+        @if (confirmPasswordError()) {
+          <p class="field-error" id="confirm-password-error">{{ confirmPasswordError() }}</p>
+        }
+      </div>
+
+      <div class="actions">
+        <button class="submit" type="submit" [disabled]="submitting()">
+          @if (submitting()) {
+            <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+            Creating account
+          } @else {
+            Create account
+          }
+        </button>
+        <p class="switch">Already have an account? <a class="link" routerLink="/login">Sign in</a></p>
+      </div>
+    </form>
+  </section>
+</main>

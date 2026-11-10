@@ -7,6 +7,7 @@ import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
 import { AuthenticationService } from './services/authentication.service';
+import { PostControllerService } from './services/post-controller.service';
 
 /**
  * Module that provides all services and configuration.
@@ -17,6 +18,7 @@ import { AuthenticationService } from './services/authentication.service';
   declarations: [],
   providers: [
     AuthenticationService,
+    PostControllerService,
     ApiConfiguration
   ],
 })

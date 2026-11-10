@@ -8,17 +8,14 @@ import { filter, map } from 'rxjs/operators';
 import { StrictHttpResponse } from '../../strict-http-response';
 import { RequestBuilder } from '../../request-builder';
 
-import { AuthenticationRequest } from '../../models/authentication-request';
 import { AuthenticationResponse } from '../../models/authentication-response';
 
-export interface Authenticate$Params {
-      body: AuthenticationRequest
+export interface Refresh$Params {
 }
 
-export function authenticate(http: HttpClient, rootUrl: string, params: Authenticate$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
-  const rb = new RequestBuilder(rootUrl, authenticate.PATH, 'post');
+export function refresh(http: HttpClient, rootUrl: string, params?: Refresh$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
+  const rb = new RequestBuilder(rootUrl, refresh.PATH, 'post');
   if (params) {
-    rb.body(params.body, 'application/json');
   }
 
   return http.request(
@@ -31,4 +28,4 @@ export function authenticate(http: HttpClient, rootUrl: string, params: Authenti
   );
 }
 
-authenticate.PATH = '/auth/authenticate';
+refresh.PATH = '/auth/refresh';

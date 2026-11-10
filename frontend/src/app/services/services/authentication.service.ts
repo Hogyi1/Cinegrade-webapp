@@ -11,13 +11,21 @@ import { BaseService } from '../base-service';
 import { ApiConfiguration } from '../api-configuration';
 import { StrictHttpResponse } from '../strict-http-response';
 
-import { authenticate } from '../fn/authentication/authenticate';
-import { Authenticate$Params } from '../fn/authentication/authenticate';
+import { activate } from '../fn/authentication/activate';
+import { Activate$Params } from '../fn/authentication/activate';
 import { AuthenticationResponse } from '../models/authentication-response';
-import { confirm } from '../fn/authentication/confirm';
-import { Confirm$Params } from '../fn/authentication/confirm';
+import { isUsernameAvailable } from '../fn/authentication/is-username-available';
+import { IsUsernameAvailable$Params } from '../fn/authentication/is-username-available';
+import { login } from '../fn/authentication/login';
+import { Login$Params } from '../fn/authentication/login';
+import { logout } from '../fn/authentication/logout';
+import { Logout$Params } from '../fn/authentication/logout';
+import { refresh } from '../fn/authentication/refresh';
+import { Refresh$Params } from '../fn/authentication/refresh';
 import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
+import { resend } from '../fn/authentication/resend';
+import { Resend$Params } from '../fn/authentication/resend';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService extends BaseService {
@@ -54,53 +62,153 @@ export class AuthenticationService extends BaseService {
     );
   }
 
-  /** Path part for operation `authenticate()` */
-  static readonly AuthenticatePath = '/auth/authenticate';
+  /** Path part for operation `refresh()` */
+  static readonly RefreshPath = '/auth/refresh';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `authenticate()` instead.
+   * To access only the response body, use `refresh()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  authenticate$Response(params: Authenticate$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
-    return authenticate(this.http, this.rootUrl, params, context);
+  refresh$Response(params?: Refresh$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
+    return refresh(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `authenticate$Response()` instead.
+   * To access the full response (for headers, for example), `refresh$Response()` instead.
    *
-   * This method sends `application/json` and handles request body of type `application/json`.
+   * This method doesn't expect any request body.
    */
-  authenticate(params: Authenticate$Params, context?: HttpContext): Observable<AuthenticationResponse> {
-    return this.authenticate$Response(params, context).pipe(
+  refresh(params?: Refresh$Params, context?: HttpContext): Observable<AuthenticationResponse> {
+    return this.refresh$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body)
     );
   }
 
-  /** Path part for operation `confirm()` */
-  static readonly ConfirmPath = '/auth/activate-account';
+  /** Path part for operation `logout()` */
+  static readonly LogoutPath = '/auth/logout';
 
   /**
    * This method provides access to the full `HttpResponse`, allowing access to response headers.
-   * To access only the response body, use `confirm()` instead.
+   * To access only the response body, use `logout()` instead.
    *
    * This method doesn't expect any request body.
    */
-  confirm$Response(params: Confirm$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
-    return confirm(this.http, this.rootUrl, params, context);
+  logout$Response(params?: Logout$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return logout(this.http, this.rootUrl, params, context);
   }
 
   /**
    * This method provides access only to the response body.
-   * To access the full response (for headers, for example), `confirm$Response()` instead.
+   * To access the full response (for headers, for example), `logout$Response()` instead.
    *
    * This method doesn't expect any request body.
    */
-  confirm(params: Confirm$Params, context?: HttpContext): Observable<void> {
-    return this.confirm$Response(params, context).pipe(
+  logout(params?: Logout$Params, context?: HttpContext): Observable<void> {
+    return this.logout$Response(params, context).pipe(
       map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `login()` */
+  static readonly LoginPath = '/auth/login';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `login()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  login$Response(params: Login$Params, context?: HttpContext): Observable<StrictHttpResponse<AuthenticationResponse>> {
+    return login(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `login$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  login(params: Login$Params, context?: HttpContext): Observable<AuthenticationResponse> {
+    return this.login$Response(params, context).pipe(
+      map((r: StrictHttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `activate()` */
+  static readonly ActivatePath = '/auth/activate';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `activate()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  activate$Response(params: Activate$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return activate(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `activate$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  activate(params: Activate$Params, context?: HttpContext): Observable<void> {
+    return this.activate$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `resend()` */
+  static readonly ResendPath = '/auth/activate/resend';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `resend()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  resend$Response(params: Resend$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return resend(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `resend$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  resend(params: Resend$Params, context?: HttpContext): Observable<void> {
+    return this.resend$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `isUsernameAvailable()` */
+  static readonly IsUsernameAvailablePath = '/auth/username-available';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `isUsernameAvailable()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  isUsernameAvailable$Response(params: IsUsernameAvailable$Params, context?: HttpContext): Observable<StrictHttpResponse<boolean>> {
+    return isUsernameAvailable(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `isUsernameAvailable$Response()` instead.
+   *
+   * This method doesn't expect any request body.
+   */
+  isUsernameAvailable(params: IsUsernameAvailable$Params, context?: HttpContext): Observable<boolean> {
+    return this.isUsernameAvailable$Response(params, context).pipe(
+      map((r: StrictHttpResponse<boolean>): boolean => r.body)
     );
   }
 
