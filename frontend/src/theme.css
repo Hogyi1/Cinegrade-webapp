@@ -1,0 +1,154 @@
+/* Lets the colour wheel's rotation animate. */
+@property --wheel-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 200deg;
+}
+
+/* CineGrade web theme. Same token names and dark values as the desktop app's
+   src/main/resources/css/theme.css, so both products map 1:1. */
+
+:root {
+  --font-family-primary: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --font-family-secondary: Consolas, "SF Mono", Menlo, monospace;
+
+  /* Backgrounds and surfaces */
+  --clr-dark: #121316;
+  --clr-almostdarkgrey: #1c1e22;
+  --clr-darkgrey: #24262a;
+  --clr-surface: #292c31;
+  --clr-surface-card: #32363d;
+  --clr-surface-input: #181a1d;
+
+  /* Borders */
+  --clr-border: #383c44;
+  --clr-border-subtle: #2d3036;
+
+  /* Blue and purple accents */
+  --clr-blue: #146bd1;
+  --clr-blue-hover: #1d7cf0;
+  --clr-blue-active: #0f54a8;
+  --clr-purple: #9999ff;
+  --clr-purple-dark: #685c83;
+  --clr-almostgrey: #463f58;
+  --clr-darkblue: #010160;
+
+  /* Status */
+  --clr-danger: #e02424;
+  --clr-danger-hover: #f03e3e;
+  --clr-danger-active: #c81e1e;
+  --clr-danger-glow: rgba(224, 36, 36, 0.22);
+  --clr-warning: #f59e0b;
+  --clr-success: #10b981;
+
+  /* Text */
+  --clr-text-primary: #ffffff;
+  --clr-text-secondary: #aab8c2;
+  --clr-text-muted: #848484;
+  --clr-text-dim: #5e5e5e;
+
+  /* Edit slider tracks */
+  --clr-wb-cool: #4a8ae8;
+  --clr-wb-neutral: #d8d8d8;
+  --clr-wb-warm: #e8b84a;
+
+  /* Main action colour, and the grey at the centre of the colour wheel */
+  --cream: #fff9ec;
+  --cream-hover: #ffffff;
+  --cream-active: #e9e3d6;
+  --neutral: 28, 30, 34;
+  --error-text: #ffa3a3;
+
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --clr-dark: #c4c6cb;
+  --clr-almostdarkgrey: #d5d7db;
+  --clr-darkgrey: #e4e5e8;
+  --clr-surface: #edeef0;
+  --clr-surface-card: #f6f6f7;
+  --clr-surface-input: #fbfbfc;
+
+  --clr-border: #a9adb5;
+  --clr-border-subtle: #c9ccd2;
+
+  --clr-text-primary: #16181c;
+  --clr-text-secondary: #3f4650;
+  --clr-text-muted: #565d67;
+  --clr-text-dim: #6b727c;
+
+  --cream: #1c1e22;
+  --cream-hover: #000000;
+  --cream-active: #33363c;
+  --neutral: 228, 229, 232;
+  --error-text: #a01818;
+
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--clr-almostdarkgrey);
+  color: var(--clr-text-primary);
+  font-family: var(--font-family-primary);
+}
+
+/* The logo is cream, so it needs its light parts dark on a light page. Keeps the orange. */
+:root[data-theme="light"] img[src*="whole-cine-logo"] {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+.cg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 18px;
+  background: var(--cream);
+  border: 1px solid var(--cream);
+  border-radius: 4px;
+  color: rgb(var(--neutral));
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.cg-btn:hover:not(:disabled) {
+  background: var(--cream-hover);
+  border-color: var(--cream-hover);
+  color: rgb(var(--neutral));
+}
+
+.cg-btn:active:not(:disabled) {
+  background: var(--cream-active);
+}
+
+.cg-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.cg-btn--quiet {
+  background: transparent;
+  border-color: var(--clr-border);
+  color: var(--clr-text-primary);
+}
+
+.cg-btn--quiet:hover:not(:disabled) {
+  background: transparent;
+  border-color: var(--cream);
+  color: var(--clr-text-primary);
+}
+
+.cg-btn--quiet:active:not(:disabled) {
+  background: transparent;
+}
+
+.cg-btn:focus-visible {
+  outline: 2px solid var(--clr-blue-hover);
+  outline-offset: 2px;
+}
