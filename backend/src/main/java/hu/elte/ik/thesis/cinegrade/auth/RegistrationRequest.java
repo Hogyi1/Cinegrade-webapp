@@ -1,9 +1,6 @@
 package hu.elte.ik.thesis.cinegrade.auth;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -13,24 +10,28 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-@NoArgsConstructor // Jackson 3 (Spring Boot 4) üres konstruktorral hozza létre a JSON-ból
+@NoArgsConstructor
 @AllArgsConstructor
-//Megnézni a custom validatort
 public class RegistrationRequest {
 
-	@NotEmpty(message = "First name is mandatory")
-	@NotBlank(message = "First name is mandatory")
-	private String firstName;
-	@NotEmpty(message = "Last name is mandatory")
-	@NotBlank(message = "Last name is mandatory")
-	private String lastName;
+	@NotBlank(message = "Username is mandatory")
+	@Pattern(regexp = "^[a-zA-Z0-9_]{3,30}$", message = "Use 3 to 30 letters, numbers or underscores")
+	private String username;
+
 	@Email(message = "Email is not formatted")
 	@NotEmpty(message = "Email is mandatory")
 	@NotBlank(message = "Email is mandatory")
 	private String email;
-	@NotEmpty(message = "Password is mandatory")
-	@NotBlank(message = "Password is mandatory")
-	@Size(min = 8, message = "Password should be 8 characters long minimum")
-	private String password;
 
+	@NotBlank(message = "Password is mandatory")
+	@Size(min = 8, message = "Password should be minimum 8 characters long")
+	@Pattern(
+			regexp = "^(?=(?:.*\\d){2,}).*$",
+			message = "Password must contain at least 2 numbers"
+	)
+	@Pattern(
+			regexp = "^(?=.*[^a-zA-Z0-9\\s]).*$",
+			message = "Password must contain at least 1 special character"
+	)
+	private String password;
 }

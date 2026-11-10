@@ -12,6 +12,5 @@ import lombok.Setter;
 @NoArgsConstructor // Jackson 3 (Spring Boot 4) üres konstruktorral hozza létre a JSON-ból
 @AllArgsConstructor
 public class AuthenticationResponse {
-
 	private String token;
 }

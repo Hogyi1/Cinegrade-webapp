@@ -7,6 +7,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import hu.elte.ik.thesis.cinegrade.files.StoredFile;
+import jakarta.persistence.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -14,17 +16,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import hu.elte.ik.thesis.cinegrade.role.Role;
+import hu.elte.ik.thesis.cinegrade.role.UserRole;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EntityListeners;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -37,69 +30,53 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "users") // "user" foglalt szó PostgreSQL-ben
+@Table(name = "users")
 @EntityListeners(AuditingEntityListener.class)
 public class User implements UserDetails, Principal {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(nullable = false, updatable = false)
-	private Integer id;
-	private String firstName;
-	private String lastName;
-	private LocalDate dateOfBirth;
-	@Column(unique = true, nullable = false, updatable = false)
-	private String email;
-	private String password;
-	private boolean accountLocked;
-	private boolean enabled;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(nullable = false, updatable = false)
+    private Long id;
+    @Column(unique = true, nullable = false, updatable = false)
+    private String email;
+    @Column(unique = true, nullable = false)
+    private String username;
+    @Column(length = 750)
+    private String description;
+    private String password;
+    private boolean accountLocked;
+    private boolean enabled;
 
-	// A fetchType megmondja, hogy ezt a listát hogyan töltse be, tehát a user
-	// Rolejait belerakja automatikusan, az EAGER mindig belerakja a Lazy viszont
-	// csak akkor ha lekérdezik
-	@ManyToMany(fetch = FetchType.EAGER)
-	private List<Role> roles; // ez majd a getAuthoritieshez kell
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "avatar_file_id")
+    private StoredFile avatarFile;
 
-	// EntityListenerhez kell, automatikusan állítja
-	@CreatedDate
-	@Column(nullable = false, updatable = false)
-	private LocalDateTime createdDate;
-	@LastModifiedDate
-	@Column(insertable = false)
-	private LocalDateTime lastModifiedDate;
+    // A fetchType megmondja, hogy ezt a listát hogyan töltse be, tehát a user
+    // Rolejait belerakja automatikusan, az EAGER mindig belerakja a Lazy viszont
+    // csak akkor ha lekérdezik
+    @ManyToOne(fetch = FetchType.EAGER)
+    private UserRole userRole;
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
-	}
+    @CreatedDate
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdDate;
+    @LastModifiedDate
+    @Column(insertable = false)
+    private LocalDateTime lastModifiedDate;
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
-	}
+    @Override
+    public String getName() {
+        return username;
+    }
 
-	@Override
-	public String getUsername() {
-		return email;
-	}
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.userRole.getName()));
+    }
 
-	@Override
-	public String getName() {
-		return email;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return !accountLocked;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-
-	public String getFullname() {
-		return firstName + " " + lastName;
-	}
+    @Override
+    public boolean isAccountNonLocked() {
+        return !accountLocked;
+    }
 }

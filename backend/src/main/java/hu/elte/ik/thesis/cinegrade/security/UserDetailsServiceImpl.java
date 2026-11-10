@@ -10,19 +10,19 @@ import hu.elte.ik.thesis.cinegrade.user.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Locale;
+
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
 	private final UserRepository repository;
 
-	// Csak szimplán betöltjük azt a usert aki be akar jelentkezni az emailje
-	// alapján
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String userEmail) throws UsernameNotFoundException {
-		return repository.findUserByEmail(userEmail)
-				.orElseThrow(() -> new UsernameNotFoundException("User not found " + "userEmail"));
+	public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+		String normalized = login.toLowerCase(Locale.ROOT);
+		return repository.findUserByEmailOrUsername(normalized, normalized)
+				.orElseThrow(() -> new UsernameNotFoundException("User not found " + login));
 	}
-
 }

@@ -1,53 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Account Activation</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 10px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        .activation-code {
-            font-size: 36px;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .activation-link {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
-        }
-        .activation-link a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-    </style>
+    <meta name="color-scheme" content="dark">
+    <meta name="supported-color-schemes" content="dark">
+    <title>Activate your CineGrade account</title>
 </head>
-<body>
-<div class="container">
-    <h1>Account Activation</h1>
-    <p class="greeting" th:text="'Hello ' + ${username} + ','"></p>
-    <p>Thank you for signing up! Please use the following activation code to activate your account:</p>
-    <div class="activation-code"><span th:text="${activation_code}"></span></div>
-    <div class="activation-link">
-        <a th:href="${confirmationUrl}" target="_blank">Activate your account</a>
-    </div>
-</div>
+<body style="margin:0;padding:0;background-color:#1c1e22;">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#1c1e22" style="background-color:#1c1e22;">
+    <tr>
+        <td align="center" style="padding:32px 16px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#292c31"
+                   style="max-width:600px;background-color:#292c31;border:1px solid #383c44;border-radius:4px;font-family:'Segoe UI',Arial,sans-serif;">
+                <tr>
+                    <td bgcolor="#24262a" style="padding:28px 36px;background-color:#24262a;border-radius:4px 4px 0 0;">
+                        <img src="cid:logo" width="180" alt="CineGrade" style="display:block;width:180px;max-width:100%;height:auto;border:0;">
+                    </td>
+                </tr>
+                <tr>
+                    <td height="4" bgcolor="#d8d8d8"
+                        style="height:4px;font-size:0;line-height:0;background-color:#d8d8d8;background-image:linear-gradient(90deg,#4a8ae8,#d8d8d8,#e8b84a);">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td style="padding:32px 36px 8px;color:#ffffff;">
+                        <h1 style="margin:0 0 16px;font-size:24px;font-weight:300;line-height:1.25;color:#ffffff;">Activate your account</h1>
+                        <p style="margin:0 0 8px;font-size:15px;line-height:1.5;color:#aab8c2;" th:text="'Hello ' + ${username} + ','">Hello,</p>
+                        <p style="margin:0;font-size:15px;line-height:1.5;color:#aab8c2;">Use this code to finish creating your CineGrade account.</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:20px 36px;">
+                        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+                            <tr>
+                                <td align="center" bgcolor="#181a1d"
+                                    style="padding:18px 12px;background-color:#181a1d;border:1px solid #383c44;border-radius:4px;font-family:Consolas,Menlo,monospace;font-size:34px;letter-spacing:10px;color:#ffffff;"
+                                    th:text="${activation_code}">000000</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="center" style="padding:4px 36px 28px;">
+                        <a th:href="${confirmationUrl}" target="_blank"
+                           style="display:inline-block;padding:13px 28px;background-color:#146bd1;border-radius:4px;color:#ffffff;font-size:15px;font-weight:600;text-decoration:none;">Activate your account</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding:18px 36px 24px;border-top:1px solid #383c44;">
+                        <p style="margin:0;font-size:13px;line-height:1.5;color:#aab8c2;">This code expires soon. If you didn't create a CineGrade account, you can ignore this email.</p>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

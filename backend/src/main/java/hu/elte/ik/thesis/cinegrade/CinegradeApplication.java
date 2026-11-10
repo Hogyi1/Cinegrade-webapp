@@ -7,8 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import hu.elte.ik.thesis.cinegrade.role.Role;
+import hu.elte.ik.thesis.cinegrade.role.UserRole;
 import hu.elte.ik.thesis.cinegrade.role.RoleRepository;
+
+import java.util.List;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -22,9 +24,10 @@ public class CinegradeApplication {
 	@Bean
 	public CommandLineRunner runner(RoleRepository roleRepository) {
 		return args -> {
-			if (roleRepository.findByName("USER").isEmpty()) {
-				roleRepository.save(Role.builder().name("USER").build());
-
+			for (String name : List.of("ROLE_USER", "ROLE_ADMIN")){
+				if (roleRepository.findByName(name).isEmpty()) {
+					roleRepository.save(UserRole.builder().name(name).build());
+				}
 			}
 		};
 	}

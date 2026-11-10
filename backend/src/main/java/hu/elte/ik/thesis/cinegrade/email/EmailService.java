@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
@@ -40,7 +41,7 @@ public class EmailService {
 		}
 
 		MimeMessage mimeMessage = mailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED,
+		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
 				StandardCharsets.UTF_8.name());
 
 		Map<String, Object> properties = new HashMap<>();
@@ -62,6 +63,7 @@ public class EmailService {
 		String template = templateEngine.process(templateName, context);
 
 		helper.setText(template, true);
+		helper.addInline("logo", new ClassPathResource("email/whole-cine-logo.png"));
 
 		mailSender.send(mimeMessage);
 	}
