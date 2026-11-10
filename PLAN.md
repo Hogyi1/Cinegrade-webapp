@@ -170,7 +170,7 @@ Used only behind `/auth/username-available`, with Guava, built from the database
 
 ## UI (Claude)
 
-Dark theme taken from the desktop app's `theme.css` tokens, so both products feel like one. Generated files get the `[AI-GENERATED]` marker your desktop code uses.
+Dark theme taken from the desktop app's `theme.css` tokens, so both products feel like one.
 
 Pages: landing `/`, feed `/explore`, post `/post/:id`, profile `/u/:username`, new post `/new`, account `/me` (profile, username with live availability, my posts, signed-in devices), reworked login, register and activate, app shell, embed mode.
 
