@@ -1,0 +1,46 @@
+<header class="bar">
+  <a class="home" routerLink="/" aria-label="CineGrade home">
+    <img src="images/whole-cine-logo.png" alt="" width="512" height="170" />
+  </a>
+
+  <div class="actions">
+    <button
+      type="button"
+      class="theme"
+      role="switch"
+      [attr.aria-checked]="isDark()"
+      aria-label="Dark theme"
+      (click)="toggleTheme()"
+    >
+      <i class="fa-solid fa-sun" aria-hidden="true"></i>
+      <i class="fa-solid fa-moon" aria-hidden="true"></i>
+      <span class="knob" [class.knob--dark]="isDark()"></span>
+    </button>
+
+    @if (isLoggedIn()) {
+      <div class="account" #account>
+        <button
+          #avatarButton
+          type="button"
+          class="avatar"
+          aria-label="Account menu"
+          [attr.aria-expanded]="menuOpen()"
+          (click)="toggleMenu()"
+        >
+          <span class="avatar-face">{{ initial() }}</span>
+        </button>
+
+        @if (menuOpen()) {
+          <div class="menu">
+            <p class="menu-name">{{ username() }}</p>
+            <a class="menu-item" routerLink="/account" (click)="closeMenu()">My account</a>
+            <button type="button" class="menu-item" (click)="logout()">Log out</button>
+          </div>
+        }
+      </div>
+    } @else {
+      <a class="cg-btn cg-btn--quiet" routerLink="/login">Sign in</a>
+      <a class="cg-btn" routerLink="/register">Sign up</a>
+    }
+  </div>
+</header>

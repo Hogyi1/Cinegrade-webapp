@@ -1,0 +1,162 @@
+:host {
+  display: block;
+}
+
+.account {
+  width: 100%;
+  max-width: 1060px;
+  margin: 0 auto;
+  padding: clamp(28px, 5vw, 56px) 16px 64px;
+}
+
+h1 {
+  margin: 0 0 24px;
+  font-size: clamp(30px, 4vw, 40px);
+  font-weight: 600;
+}
+
+h2 {
+  margin: 0 0 12px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+h2 label {
+  margin: 0;
+}
+
+.account-card {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr);
+  background: var(--clr-darkgrey);
+  border: 1px solid var(--clr-border-subtle);
+  border-radius: 6px;
+}
+
+.photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 36px 28px;
+  border-right: 1px solid var(--clr-border-subtle);
+  text-align: center;
+}
+
+.circle {
+  display: grid;
+  place-items: center;
+  width: 168px;
+  height: 168px;
+  margin: 8px 0 22px;
+  overflow: hidden;
+  background: var(--clr-surface-card);
+  border: 1px solid var(--clr-border);
+  border-radius: 50%;
+  color: var(--clr-text-secondary);
+  font-size: 68px;
+  font-weight: 300;
+}
+
+.circle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.photo-actions {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 8px;
+}
+
+.details {
+  display: grid;
+  gap: 36px;
+  align-content: start;
+  padding: 36px;
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.line--end {
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+input:not([type="file"]),
+textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  padding: 9px 12px;
+  background: var(--clr-surface-input);
+  border: 1px solid var(--clr-border);
+  border-radius: 4px;
+  color: var(--clr-text-primary);
+  font: inherit;
+  font-size: 15px;
+}
+
+textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+textarea::placeholder {
+  color: var(--clr-text-muted);
+}
+
+input:focus-visible,
+textarea:focus-visible {
+  border-color: var(--clr-blue-hover);
+  outline: 1px solid var(--clr-blue-hover);
+}
+
+.hint,
+.error,
+.not-saved {
+  margin: 8px 0 0;
+  font-size: 14px;
+}
+
+.hint {
+  color: var(--clr-text-secondary);
+}
+
+.line--end .hint {
+  margin: 0;
+}
+
+.error {
+  color: var(--error-text);
+}
+
+.not-saved {
+  color: var(--clr-text-primary);
+  font-weight: 600;
+}
+
+@media (max-width: 760px) {
+  .account-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .photo {
+    border-right: 0;
+    border-bottom: 1px solid var(--clr-border-subtle);
+  }
+
+  .details {
+    padding: 28px 20px;
+  }
+
+  .line:not(.line--end) {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

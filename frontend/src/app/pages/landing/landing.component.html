@@ -1,0 +1,70 @@
+<main>
+  <section class="hero">
+    <h1 class="title" aria-label="CineGrade">
+      <span aria-hidden="true">CINE</span>
+      <span class="title-second" aria-hidden="true">GRADE</span>
+    </h1>
+    <p class="tagline">Colour grade your photos on the GPU, then share the look.</p>
+    <div class="hero-actions">
+      <button type="button" class="cg-btn" disabled>Download coming soon</button>
+      <button type="button" class="cg-btn cg-btn--quiet" (click)="showAbout()">See what it does</button>
+    </div>
+  </section>
+
+  <div class="sheet" #about>
+    <section class="feature">
+      <div class="copy">
+        <h2>Your originals stay untouched</h2>
+        <p>
+          CineGrade is a desktop app for grading photos. Every adjustment runs on your graphics card
+          through OpenGL and is stored as an edit, so you can undo it or start over at any time.
+        </p>
+      </div>
+      <div class="scene" role="img" aria-label="An illustrated landscape, flat on the left and graded on the right">
+        <div class="scene-art scene-art--before"></div>
+        <div class="scene-art scene-art--after"></div>
+        <span class="scene-label">Before</span>
+        <span class="scene-label scene-label--after">After</span>
+      </div>
+    </section>
+
+    <section class="feature feature--flip">
+      <div class="copy">
+        <h2>One path from import to export</h2>
+        <p>
+          Bring in a shoot, rate and label the keepers, and compare before and after with one shortcut.
+          Copy an edit from one photo and paste it onto the next.
+        </p>
+      </div>
+      <ol class="steps">
+        <li><strong>Import</strong><span>Pick the photos for a project</span></li>
+        <li><strong>Develop</strong><span>Grade, rate and compare</span></li>
+        <li><strong>Export</strong><span>Write the finished files</span></li>
+      </ol>
+    </section>
+
+    <section class="feature">
+      <div class="copy">
+        <h2>Take the look with you</h2>
+        <p>
+          Save a grade as a preset for your next project. Export finished photos as JPEG or TIFF, or
+          turn the grade into a 3D LUT that other software can load.
+        </p>
+      </div>
+      <ul class="formats">
+        <li>.jpeg</li>
+        <li>.tiff</li>
+        <li>.cube</li>
+        <li>.cgedit</li>
+      </ul>
+    </section>
+
+    <section class="share">
+      <h2>A place to share your grades</h2>
+      <p>
+        The CineGrade community is on its way. You'll be able to post your edits and LUTs here, and
+        download looks from other people straight into the app.
+      </p>
+    </section>
+  </div>
+</main>

@@ -1,0 +1,236 @@
+:host {
+  display: block;
+}
+
+/* The same colour wheel as the sign-in pages: grey centre, hue at the rim. */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 64px);
+  min-height: calc(100dvh - 64px);
+  padding: 48px 16px 112px;
+  background:
+    radial-gradient(
+      ellipse farthest-corner at 50% 50%,
+      rgb(var(--neutral)) 34%,
+      rgba(var(--neutral), 0.86) 58%,
+      rgba(var(--neutral), 0.5) 82%,
+      rgba(var(--neutral), 0.24) 100%
+    ),
+    conic-gradient(
+      from var(--wheel-angle) at 50% 50%,
+      #ff3b3b,
+      #ffd23f,
+      #3ddc6e,
+      #2fd0e6,
+      #3f6bff,
+      #d64bff,
+      #ff3b3b
+    );
+  text-align: center;
+  animation: wheel-settle 1400ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes wheel-settle {
+  from { --wheel-angle: 140deg; }
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  margin: 0 0 28px;
+  font-size: clamp(44px, 11vw, 124px);
+  font-weight: 700;
+  letter-spacing: 0.26em;
+  line-height: 1.08;
+}
+
+.title span {
+  align-self: flex-start;
+}
+
+.title-second {
+  margin-left: 1em;
+  color: var(--clr-warning);
+}
+
+:host-context([data-theme="light"]) .title-second {
+  color: #a35f00;
+}
+
+.tagline {
+  margin: 0 0 32px;
+  color: var(--clr-text-secondary);
+  font-size: clamp(17px, 2vw, 21px);
+}
+
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.sheet {
+  position: relative;
+  scroll-margin-top: 80px;
+  display: grid;
+  gap: clamp(56px, 8vw, 104px);
+  margin: -64px clamp(0px, 2vw, 32px) 56px;
+  padding: clamp(40px, 7vw, 88px) clamp(20px, 7vw, 96px);
+  background: var(--clr-darkgrey);
+  border-radius: 28px;
+}
+
+.feature {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  align-items: center;
+  gap: clamp(28px, 6vw, 80px);
+}
+
+.feature--flip .copy {
+  order: 2;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: clamp(25px, 3vw, 36px);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--clr-text-secondary);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+/* The same picture twice, cut in half. Only the filter differs. */
+.scene {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.scene-art {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 68% 54%, #ffe2a8 0 6%, rgba(255, 190, 110, 0.75) 7%, transparent 34%),
+    linear-gradient(172deg, transparent 0 66%, #27362f 66.4% 100%),
+    linear-gradient(186deg, transparent 0 58%, #4c5f55 58.4% 100%),
+    linear-gradient(#5f7f9f 0%, #d9a57c 58%, #d9a57c 100%);
+}
+
+.scene-art--before {
+  clip-path: inset(0 50% 0 0);
+  filter: saturate(0.3) contrast(0.72) brightness(1.08);
+}
+
+.scene-art--after {
+  clip-path: inset(0 0 0 50%);
+  filter: saturate(1.45) contrast(1.22);
+}
+
+.scene::after {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 50%;
+  width: 2px;
+  background: #fff9ec;
+}
+
+.scene-label {
+  position: absolute;
+  bottom: 12px;
+  left: 14px;
+  color: #fff9ec;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.scene-label--after {
+  right: 14px;
+  left: auto;
+}
+
+.steps {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+}
+
+.steps li {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  column-gap: 8px;
+  padding: 16px 20px;
+  background: var(--clr-surface);
+  border-radius: 8px;
+  counter-increment: step;
+}
+
+.steps li::before {
+  content: counter(step);
+  grid-row: span 2;
+  align-self: center;
+  color: var(--clr-text-secondary);
+  font-size: 28px;
+  font-weight: 300;
+}
+
+.steps span {
+  color: var(--clr-text-secondary);
+}
+
+.formats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.formats li {
+  padding: 26px 20px;
+  background: var(--clr-surface);
+  border-radius: 8px;
+  font-family: var(--font-family-secondary);
+  font-size: clamp(19px, 2.4vw, 26px);
+  text-align: center;
+}
+
+.share {
+  padding-top: clamp(40px, 6vw, 64px);
+  border-top: 1px solid var(--clr-border);
+}
+
+@media (max-width: 760px) {
+  .feature {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .feature--flip .copy {
+    order: 0;
+  }
+
+  .title {
+    letter-spacing: 0.18em;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero {
+    animation: none;
+  }
+}

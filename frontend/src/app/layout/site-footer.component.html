@@ -1,0 +1,35 @@
+<footer class="footer">
+  <div class="rule" aria-hidden="true"></div>
+
+  <div class="columns">
+    <section class="socials">
+      <h2>Socials</h2>
+      <ul>
+        @for (social of socials; track social.name) {
+          <li>
+            @if (social.url) {
+              <a [href]="social.url" rel="noopener">{{ social.name }}</a>
+            } @else {
+              <span>{{ social.name }}</span>
+            }
+          </li>
+        }
+      </ul>
+    </section>
+
+    <section class="help">
+      <p class="help-line">Something not working?</p>
+      <a class="cg-btn" [href]="reportLink">Report a problem</a>
+      <p class="contact-label">Contact us at</p>
+      <a class="contact" [href]="'mailto:' + email">{{ email }}</a>
+    </section>
+
+    <section class="end">
+      <button type="button" class="top" (click)="backToTop()">
+        <i class="fa-solid fa-angles-up" aria-hidden="true"></i>
+        Back to the top
+      </button>
+      <p class="copyright">&copy; CineGrade {{ year }}</p>
+    </section>
+  </div>
+</footer>

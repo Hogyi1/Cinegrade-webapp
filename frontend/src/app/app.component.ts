@@ -13,5 +13,5 @@ import { Router, RouterOutlet } from '@angular/router';
 
 
 export class AppComponent {
-  title = 'Login Project app';
+  title = 'CineGrade';
 }
