@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.scheduling.annotation.EnableAsync;
 
-import hu.elte.ik.thesis.cinegrade.role.UserRole;
-import hu.elte.ik.thesis.cinegrade.role.RoleRepository;
+import hu.elte.ik.thesis.cinegrade.user.role.UserRole;
+import hu.elte.ik.thesis.cinegrade.user.role.RoleRepository;
 
 import java.util.List;
 

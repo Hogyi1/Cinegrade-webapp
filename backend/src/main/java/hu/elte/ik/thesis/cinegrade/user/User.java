@@ -3,6 +3,7 @@ package hu.elte.ik.thesis.cinegrade.user;
 import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +17,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import hu.elte.ik.thesis.cinegrade.role.UserRole;
+import hu.elte.ik.thesis.cinegrade.user.dto.UpdateLinksRequest;
+import hu.elte.ik.thesis.cinegrade.user.role.UserRole;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -52,6 +54,17 @@ public class User implements UserDetails, Principal {
     @JoinColumn(name = "avatar_file_id")
     private StoredFile avatarFile;
 
+    private LocalDateTime usernameChangedAt;
+
+    // [AI-GENERATED] Profile links (website, Instagram, ...), in the order the user put them.
+    // LAZY and open-in-view is off, so read them inside a transaction.
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "user_links", joinColumns = @JoinColumn(name = "user_id"))
+    @OrderColumn(name = "position")
+    @Column(name = "url", nullable = false, length = UpdateLinksRequest.MAX_LINK_LENGTH)
+    @Builder.Default
+    private List<String> links = new ArrayList<>();
+
     // A fetchType megmondja, hogy ezt a listát hogyan töltse be, tehát a user
     // Rolejait belerakja automatikusan, az EAGER mindig belerakja a Lazy viszont
     // csak akkor ha lekérdezik
@@ -64,6 +77,8 @@ public class User implements UserDetails, Principal {
     @LastModifiedDate
     @Column(insertable = false)
     private LocalDateTime lastModifiedDate;
+
+    private Integer totalDownloads;
 
     @Override
     public String getName() {

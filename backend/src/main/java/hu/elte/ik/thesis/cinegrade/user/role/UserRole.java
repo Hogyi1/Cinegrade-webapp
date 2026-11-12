@@ -1,4 +1,4 @@
-package hu.elte.ik.thesis.cinegrade.role;
+package hu.elte.ik.thesis.cinegrade.user.role;
 
 import java.time.LocalDateTime;
 import java.util.List;
