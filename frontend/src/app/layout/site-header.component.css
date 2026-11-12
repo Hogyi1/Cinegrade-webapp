@@ -1,8 +1,11 @@
+/* [AI-GENERATED] A floating, rounded glass bar: the page scrolls by underneath it. */
 :host {
   position: sticky;
   top: 0;
   z-index: 20;
   display: block;
+  padding: 12px clamp(10px, 2.5vw, 28px) 0;
+  pointer-events: none; /* The gap around the bar stays clickable. */
 }
 
 .bar {
@@ -10,10 +13,72 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  height: 64px;
-  padding: 0 clamp(16px, 4vw, 48px);
-  background: var(--clr-dark);
-  border-bottom: 1px solid var(--clr-border-subtle);
+  max-width: 1280px;
+  height: 60px;
+  margin: 0 auto;
+  padding: 0 10px 0 20px;
+  background: color-mix(in srgb, var(--clr-dark) 74%, transparent);
+  border: 1px solid color-mix(in srgb, var(--clr-border) 70%, transparent);
+  border-radius: 20px;
+  box-shadow: 0 12px 32px -12px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(18px) saturate(1.4);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  pointer-events: auto;
+}
+
+/* Browsers without blur get a solid bar so the text stays readable. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .bar {
+    background: var(--clr-dark);
+  }
+}
+
+app-user-search {
+  flex: 0 1 340px;
+  /* On phones it shrinks to a round search button, never to nothing. */
+  min-width: 38px;
+}
+
+/* [AI-GENERATED] Sign in: a quiet outlined pill. Sign up: the brand gradient. */
+.auth-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 20px;
+  border-radius: 999px;
+  font-family: var(--font-family-display);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.auth-btn--ghost {
+  border: 1px solid var(--clr-border);
+  color: var(--clr-text-primary);
+}
+
+.auth-btn--ghost:hover {
+  background: color-mix(in srgb, var(--clr-text-primary) 8%, transparent);
+  border-color: var(--clr-text-secondary);
+}
+
+.auth-btn--solid {
+  background: var(--grad-brand);
+  border: 1px solid transparent;
+  color: #fff;
+  box-shadow: 0 6px 18px -6px var(--clr-violet), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.auth-btn--solid:hover {
+  box-shadow: 0 10px 26px -6px var(--clr-violet), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.auth-btn:focus-visible {
+  outline: 2px solid var(--clr-blue-hover);
+  outline-offset: 2px;
 }
 
 .home {
@@ -94,6 +159,38 @@
   font-weight: 600;
 }
 
+/* [AI-GENERATED] */
+.avatar-face--photo {
+  display: block;
+  object-fit: cover;
+}
+
+/* [AI-GENERATED] */
+.nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
+  color: var(--clr-text-secondary);
+  font-family: var(--font-family-display); /* [AI-GENERATED] */
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.nav-link:hover,
+.nav-link--active {
+  background: var(--clr-surface);
+  color: var(--clr-text-primary);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--clr-blue-hover);
+  outline-offset: 2px;
+}
+
 .menu {
   position: absolute;
   top: calc(100% + 10px);
@@ -102,7 +199,7 @@
   padding: 6px;
   background: var(--clr-surface-card);
   border: 1px solid var(--clr-border);
-  border-radius: 6px;
+  border-radius: 14px; /* [AI-GENERATED] rounder, like the bar */
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
 }
 
@@ -122,7 +219,7 @@
   padding: 8px 10px;
   background: none;
   border: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--clr-text-primary);
   font: inherit;
   font-size: 14px;
@@ -157,13 +254,57 @@
     margin-right: 0;
   }
 
-  .actions .cg-btn {
-    padding: 0 10px;
+  .auth-btn {
+    height: 34px;
+    padding: 0 11px;
+    font-size: 13px;
+  }
+
+  /* [AI-GENERATED] Logo, search, theme and both buttons all fit on a 360px phone. */
+  :host {
+    padding: 8px 8px 0;
+  }
+
+  .bar {
+    gap: 8px;
+    height: 54px;
+    padding: 0 7px 0 12px;
+    border-radius: 16px;
+  }
+
+  .home img {
+    height: 24px;
+  }
+
+  .theme {
+    width: 50px;
+    padding: 0 6px;
+  }
+
+  .knob--dark {
+    transform: translateX(20px);
+  }
+}
+
+/* [AI-GENERATED] On narrow screens the links shrink to icons, and About moves to the footer. */
+@media (max-width: 760px) {
+  .nav-link-text,
+  .nav-link--about {
+    display: none;
+  }
+
+  .nav-link {
+    padding: 0 11px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .knob {
+  .knob,
+  .auth-btn {
     transition: none;
+  }
+
+  .auth-btn--solid:hover {
+    transform: none;
   }
 }

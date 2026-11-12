@@ -17,7 +17,7 @@ apiConfig.rootUrl = '/api/v1';
 
 bootstrapApplication(AppComponent, {
   providers: [
-    // Angular 21 óta ez nélkül a képernyő nem frissül a HTTP válaszok után
+    // Angular 21 óta enélkül a képernyő nem frissül a HTTP válaszok után
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideRouter(routes, withInMemoryScrolling({ scrollPositionRestoration: 'enabled' })),

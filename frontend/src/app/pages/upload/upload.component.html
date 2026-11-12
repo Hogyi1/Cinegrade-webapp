@@ -1,0 +1,138 @@
+<!-- [AI-GENERATED] -->
+<main class="upload">
+  <h1>New post</h1>
+  <p class="intro">Share a grade: the photo before and after, and the LUT or .cgedit file that made it.</p>
+
+  <form class="layout" (ngSubmit)="submit()" novalidate>
+    <section class="panel">
+      <h2>Photos</h2>
+      <div class="pair">
+        <app-file-drop
+          label="Before"
+          hint="The original. JPG or PNG, up to 15 MB"
+          accept="image/jpeg,image/png"
+          icon="fa-regular fa-image"
+          [file]="before()"
+          (fileChange)="setImage('before', $event)"
+          (picked)="pickImage('before', $event)"
+          [previewUrl]="beforeUrl()"
+          [error]="fileErrors().before"
+        />
+        <app-file-drop
+          label="After"
+          hint="The graded photo. JPG or PNG, up to 15 MB"
+          accept="image/jpeg,image/png"
+          icon="fa-regular fa-image"
+          [file]="after()"
+          (fileChange)="setImage('after', $event)"
+          (picked)="pickImage('after', $event)"
+          [previewUrl]="afterUrl()"
+          [error]="fileErrors().after"
+        />
+      </div>
+      @if (imagesError()) {
+        <p class="error" role="alert">{{ imagesError() }}</p>
+      }
+
+      @if (beforeUrl() && afterUrl()) {
+        <div class="preview">
+          <div class="preview-head">
+            <h3>Preview</h3>
+            <button type="button" class="link-btn" (click)="swapImages()">
+              <i class="fa-solid fa-right-left" aria-hidden="true"></i> Swap
+            </button>
+          </div>
+          <app-before-after
+            class="preview-slider"
+            ratio="4 / 5"
+            [beforeSrc]="beforeUrl()"
+            [afterSrc]="afterUrl()"
+            [alt]="title() || 'Your post'"
+          />
+          <p class="hint">Drag the line to check that before and after are the right way round.</p>
+        </div>
+      }
+    </section>
+
+    <div class="side">
+      <section class="panel">
+        <h2>Details</h2>
+        <label class="field">
+          <span class="field-label">Title</span>
+          <input
+            name="title"
+            [attr.maxlength]="maxTitle"
+            placeholder="Warm film look for golden hour portraits"
+            [ngModel]="title()"
+            (ngModelChange)="title.set($event)"
+            [attr.aria-invalid]="titleError() ? 'true' : null"
+          />
+          <span class="counter">{{ title().length }} / {{ maxTitle }}</span>
+        </label>
+        @if (titleError()) {
+          <p class="error" role="alert">{{ titleError() }}</p>
+        }
+
+        <label class="field">
+          <span class="field-label">Description <span class="optional">optional</span></span>
+          <textarea
+            name="description"
+            rows="5"
+            [attr.maxlength]="maxDescription"
+            placeholder="What it's for, which camera, how strong to apply it…"
+            [ngModel]="description()"
+            (ngModelChange)="description.set($event)"
+          ></textarea>
+          <span class="counter">{{ description().length }} / {{ maxDescription }}</span>
+        </label>
+      </section>
+
+      <section class="panel">
+        <h2>Files</h2>
+        <p class="hint">At least one. Both are exported from the CineGrade app.</p>
+        <div class="pair">
+          <app-file-drop
+            label="LUT"
+            hint=".cube, Rec709"
+            accept=".cube"
+            icon="fa-solid fa-cube"
+            [file]="lut()"
+            (fileChange)="lut.set($event)"
+            (picked)="pickGradeFile('lut', $event)"
+            [error]="fileErrors().lut"
+          />
+          <app-file-drop
+            label="Edit file"
+            hint=".cgedit"
+            accept=".cgedit"
+            icon="fa-solid fa-sliders"
+            [file]="cgedit()"
+            (fileChange)="cgedit.set($event)"
+            (picked)="pickGradeFile('cgedit', $event)"
+            [error]="fileErrors().cgedit"
+          />
+        </div>
+        @if (gradeFileError()) {
+          <p class="error" role="alert">{{ gradeFileError() }}</p>
+        }
+      </section>
+
+      <section class="panel">
+        <h2>Tags <span class="optional">up to {{ maxTags }}</span></h2>
+        <app-tag-picker [(selected)]="tags" [max]="maxTags" />
+      </section>
+
+      @for (msg of errors(); track msg) {
+        <p class="error error--box" role="alert">{{ msg }}</p>
+      }
+
+      <button type="submit" class="cg-btn publish" [disabled]="sending()">
+        @if (sending()) {
+          <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Publishing…
+        } @else {
+          Publish
+        }
+      </button>
+    </div>
+  </form>
+</main>

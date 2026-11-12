@@ -1,0 +1,163 @@
+<!-- [AI-GENERATED] -->
+<main class="page">
+  <section class="column">
+    <nav class="scopes" role="tablist" aria-label="Feed">
+      <button
+        type="button"
+        role="tab"
+        class="scope"
+        [class.scope--active]="scope() === 'all'"
+        [attr.aria-selected]="scope() === 'all'"
+        (click)="selectScope('all')"
+      >
+        For you
+      </button>
+      @if (isLoggedIn()) {
+        <button
+          type="button"
+          role="tab"
+          class="scope"
+          [class.scope--active]="scope() === 'following'"
+          [attr.aria-selected]="scope() === 'following'"
+          (click)="selectScope('following')"
+        >
+          Following
+        </button>
+      }
+    </nav>
+
+    <!-- [AI-GENERATED] Tag shortcuts into the search. -->
+    @if (quickTags().length) {
+      <nav class="quick-tags" aria-label="Browse by look">
+        @for (tag of quickTags(); track tag.slug) {
+          <a class="quick-tag" routerLink="/search" [queryParams]="{ tags: tag.slug }">{{ tag.name }}</a>
+        }
+        <a class="quick-tag quick-tag--more" routerLink="/search">More <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+      </nav>
+    }
+
+    @for (post of items(); track post.id) {
+      <article class="post-card">
+        <header class="card-head">
+          <a class="author" [routerLink]="['/users', post.author?.username]">
+            @if (file(post.author?.avatarFileId); as src) {
+              <img class="author-avatar" [src]="src" alt="" width="36" height="36" />
+            } @else {
+              <span class="author-avatar author-avatar--empty" aria-hidden="true">
+                {{ post.author?.username?.charAt(0)?.toUpperCase() }}
+              </span>
+            }
+            <span class="author-name">{{ post.author?.username }}</span>
+          </a>
+          <span class="dot" aria-hidden="true">•</span>
+          <time class="when" [attr.datetime]="post.createdAt">{{ post.createdAt | timeAgo }}</time>
+        </header>
+
+        <app-before-after
+          class="picture"
+          ratio="4 / 5"
+          [beforeSrc]="file(post.beforeFileId)"
+          [afterSrc]="file(post.afterFileId)"
+          [alt]="post.title ?? 'Post'"
+        />
+
+        <div class="bar">
+          <button
+            type="button"
+            class="icon-btn"
+            [class.icon-btn--liked]="post.likedByMe"
+            [attr.aria-pressed]="post.likedByMe === true"
+            [attr.aria-label]="post.likedByMe ? 'Unlike' : 'Like'"
+            (click)="like(post)"
+          >
+            <i [class]="post.likedByMe ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" aria-hidden="true"></i>
+            <span>{{ post.likeCount | compactNumber }}</span>
+          </button>
+          <a class="icon-btn" [routerLink]="['/posts', post.id]" aria-label="Open to download">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            <span>{{ post.downloadCount | compactNumber }}</span>
+          </a>
+          <button
+            type="button"
+            class="icon-btn icon-btn--end"
+            [attr.aria-pressed]="post.savedByMe === true"
+            [attr.aria-label]="post.savedByMe ? 'Remove from saved' : 'Save'"
+            (click)="save(post)"
+          >
+            <i [class]="post.savedByMe ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <a class="title" [routerLink]="['/posts', post.id]">{{ post.title }}</a>
+        <!-- [AI-GENERATED] -->
+        <app-tag-chips class="card-tags" [tags]="post.tags ?? []" />
+      </article>
+    }
+
+    @if (errors().length) {
+      <div class="notice" role="alert">
+        @for (msg of errors(); track msg) {
+          <p>{{ msg }}</p>
+        }
+        <button type="button" class="cg-btn cg-btn--quiet" (click)="loadMore()">Try again</button>
+      </div>
+    }
+
+    @if (!loading() && !errors().length && items().length === 0) {
+      <div class="empty">
+        @if (scope() === 'following') {
+          <p>Nothing here yet. Follow a few graders and their posts show up here.</p>
+        } @else {
+          <p>No one has posted yet. Be the first.</p>
+          @if (isLoggedIn()) {
+            <a class="cg-btn" routerLink="/upload">New post</a>
+          }
+        }
+      </div>
+    }
+
+    @if (loading()) {
+      <p class="loading"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading</p>
+    } @else if (!lastPage() && !errors().length) {
+      <div class="sentinel" (appInView)="loadMore()"></div>
+    }
+  </section>
+
+  <aside class="side">
+    @if (suggestions().length) {
+      <section class="side-box">
+        <h2>Graders to follow</h2>
+        <ul class="people">
+          @for (user of suggestions(); track user.username) {
+            <li>
+              <a class="person" [routerLink]="['/users', user.username]">
+                @if (file(user.avatarFileId); as src) {
+                  <img class="author-avatar" [src]="src" alt="" width="36" height="36" />
+                } @else {
+                  <span class="author-avatar author-avatar--empty" aria-hidden="true">
+                    {{ user.username?.charAt(0)?.toUpperCase() }}
+                  </span>
+                }
+                <span class="person-text">
+                  <span class="author-name">{{ user.username }}</span>
+                  @if (user.followerCount !== undefined) {
+                    <span class="person-meta">{{ user.followerCount | compactNumber }} followers</span>
+                  }
+                </span>
+              </a>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    <section class="side-box side-box--app">
+      <h2>Grade your own</h2>
+      <p>CineGrade is a desktop app. Grade on the GPU, export a LUT, and share it here.</p>
+      @if (downloadUrl) {
+        <a class="cg-btn" [href]="downloadUrl" download>Download for Windows</a>
+      }
+      <a class="side-link" routerLink="/about">What is CineGrade?</a>
+    </section>
+  </aside>
+</main>

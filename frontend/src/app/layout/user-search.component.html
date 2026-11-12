@@ -1,0 +1,76 @@
+<!-- [AI-GENERATED] -->
+<div class="search" #box>
+  <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+  <input
+    class="search-input"
+    type="search"
+    placeholder="Search looks and people"
+    aria-label="Search looks and people"
+    role="combobox"
+    aria-controls="search-results"
+    aria-autocomplete="list"
+    [attr.aria-expanded]="open()"
+    [attr.aria-activedescendant]="active() >= 0 ? 'search-result-' + active() : null"
+    autocomplete="off"
+    autocapitalize="none"
+    spellcheck="false"
+    [value]="query()"
+    (input)="onInput($any($event.target).value)"
+    (keydown)="onKeydown($event)"
+    (focus)="open.set(query().trim().length > 0)"
+  />
+
+  @if (open()) {
+    <ul class="results" id="search-results" role="listbox">
+      @for (user of results(); track user.username; let i = $index) {
+        <li
+          class="result"
+          [class.result--active]="i === active()"
+          [id]="'search-result-' + i"
+          role="option"
+          [attr.aria-selected]="i === active()"
+          (mousedown)="$event.preventDefault()"
+          (click)="go(user)"
+        >
+          @if (avatar(user); as src) {
+            <img class="result-avatar" [src]="src" alt="" width="32" height="32" />
+          } @else {
+            <span class="result-avatar result-avatar--empty">{{ user.username?.charAt(0)?.toUpperCase() }}</span>
+          }
+          <span class="result-name">{{ user.username }}</span>
+          @if (user.followerCount !== undefined) {
+            <span class="result-meta">{{ user.followerCount }} followers</span>
+          }
+        </li>
+      }
+      <!-- [AI-GENERATED] Matching tags, then the full search. -->
+      @for (tag of tagMatches(); track tag.slug; let t = $index) {
+        <li
+          class="result"
+          [class.result--active]="results().length + t === active()"
+          [id]="'search-result-' + (results().length + t)"
+          role="option"
+          [attr.aria-selected]="results().length + t === active()"
+          (mousedown)="$event.preventDefault()"
+          (click)="pick(results().length + t)"
+        >
+          <span class="result-avatar result-avatar--empty result-icon"><i class="fa-solid fa-tag" aria-hidden="true"></i></span>
+          <span class="result-name">{{ tag.name }}</span>
+          <span class="result-meta">Tag</span>
+        </li>
+      }
+      <li
+        class="result result--search"
+        [class.result--active]="searchIndex() === active()"
+        [id]="'search-result-' + searchIndex()"
+        role="option"
+        [attr.aria-selected]="searchIndex() === active()"
+        (mousedown)="$event.preventDefault()"
+        (click)="pick(searchIndex())"
+      >
+        <span class="result-avatar result-avatar--empty result-icon"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></span>
+        <span class="result-name">Search for "{{ query().trim() }}"</span>
+      </li>
+    </ul>
+  }
+</div>

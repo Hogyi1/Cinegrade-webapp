@@ -1,121 +1,213 @@
+/* [AI-GENERATED] A deep blue-purple band. It stays dark in the light theme too,
+   so the colours here are fixed instead of following the theme's text tokens. */
 :host {
   display: block;
 }
 
 .footer {
-  padding: 28px clamp(16px, 4vw, 48px) 28px;
-  background: linear-gradient(var(--clr-almostdarkgrey), var(--clr-dark));
-}
-
-.rule {
   position: relative;
-  height: 2px;
-  background: var(--clr-border);
+  overflow: hidden;
+  background: var(--grad-night);
+  color: #ffffff;
 }
 
-.rule::before {
+/* The blue-to-purple line along the top edge */
+.footer::before {
   content: "";
   position: absolute;
-  top: -6px;
-  left: 0;
-  width: 14px;
-  height: 14px;
-  background: var(--clr-border);
-  border-radius: 50%;
+  inset: 0 0 auto;
+  height: 2px;
+  background: var(--grad-brand);
 }
 
-.columns {
+/* Soft blue and purple light behind the content */
+.glow {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(40% 70% at 12% 0%, rgba(20, 107, 209, 0.28), transparent 70%),
+    radial-gradient(40% 80% at 92% 100%, rgba(153, 153, 255, 0.22), transparent 70%);
+  pointer-events: none;
+}
+
+.inner {
+  position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 32px;
-  padding-top: 24px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr);
+  gap: clamp(32px, 6vw, 96px);
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: clamp(44px, 6vw, 72px) clamp(16px, 4vw, 48px) 40px;
+}
+
+.brand img {
+  display: block;
+  width: 168px;
+  height: auto;
+  /* The light theme inverts the logo for light pages; this band is always dark. */
+  filter: none !important;
+}
+
+.tagline {
+  max-width: 34ch;
+  margin: 18px 0 24px;
+  color: rgba(255, 255, 255, 0.72);
+  line-height: 1.6;
+}
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 14px;
+}
+
+/* A pill with a gradient border */
+.report {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background:
+    linear-gradient(#1a0f4d, #1a0f4d) padding-box,
+    linear-gradient(120deg, #146bd1, #5b5bff, #9999ff) border-box;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: box-shadow 160ms ease, transform 160ms ease;
+}
+
+.report:hover {
+  box-shadow: 0 0 22px rgba(91, 91, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.links {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 28px;
 }
 
 h2 {
-  margin: 0 0 22px;
-  font-size: clamp(36px, 5vw, 60px);
-  font-weight: 400;
+  margin: 4px 0 16px;
+  color: #9999ff;
+  font-size: 13px;
+  font-weight: 700;
   letter-spacing: 0.14em;
-  line-height: 1;
   text-transform: uppercase;
 }
 
 ul {
+  display: grid;
+  gap: 10px;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-li {
-  padding: 3px 0;
-  color: var(--clr-text-secondary);
+ul a {
+  color: rgba(255, 255, 255, 0.82);
+  text-decoration: none;
+  transition: color 140ms ease;
 }
 
-a:not(.cg-btn) {
-  color: var(--clr-text-primary);
+ul a:hover {
+  color: #ffffff;
+  text-decoration: underline;
+  text-decoration-color: #9999ff;
+  text-underline-offset: 4px;
 }
 
-.help {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-}
-
-.help-line {
-  margin: 0 0 14px;
-  font-size: 19px;
-}
-
-.contact-label {
-  margin: 26px 0 2px;
-  font-weight: 600;
-}
-
-.contact {
+.email {
   overflow-wrap: anywhere;
+  font-size: 14px;
 }
 
-.end {
+.soon {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.soon em {
+  font-style: normal;
+  font-size: 12px;
+}
+
+.bottom {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-end;
-  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px clamp(16px, 4vw, 48px) 22px;
+  border-top: 1px solid rgba(153, 153, 255, 0.16);
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 14px;
+}
+
+.bottom p {
+  margin: 0;
 }
 
 .top {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 0;
   background: none;
   border: 0;
-  color: var(--clr-text-primary);
+  color: #ffffff;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
 }
 
-.top:hover {
-  text-decoration: underline;
+.top i {
+  transition: transform 160ms ease;
 }
 
+.top:hover i {
+  transform: translateY(-3px);
+}
+
+a:focus-visible,
 .top:focus-visible {
-  outline: 2px solid var(--clr-blue-hover);
+  outline: 2px solid #9999ff;
   outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.copyright {
-  margin: 0;
-  color: var(--clr-text-secondary);
-  font-size: 14px;
+@media (max-width: 860px) {
+  .inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
-@media (max-width: 760px) {
-  .columns {
-    grid-template-columns: 1fr;
+@media (max-width: 560px) {
+  .links {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .end {
-    align-items: center;
+  .bottom {
+    flex-direction: column-reverse;
+    align-items: flex-start;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .report,
+  .top i {
+    transition: none;
+  }
+
+  .report:hover,
+  .top:hover i {
+    transform: none;
   }
 }

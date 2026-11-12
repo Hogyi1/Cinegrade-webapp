@@ -1,0 +1,296 @@
+/* [AI-GENERATED] */
+:host {
+  display: block;
+  color: var(--clr-text-primary);
+}
+
+.page {
+  width: 100%;
+  max-width: 935px;
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 48px) 16px 64px;
+}
+
+.head {
+  display: grid;
+  grid-template-columns: 184px minmax(0, 1fr);
+  gap: clamp(24px, 5vw, 56px);
+  align-items: start;
+  padding: clamp(20px, 4vw, 36px);
+  background: var(--clr-darkgrey);
+  border: 1px solid var(--clr-border-subtle);
+  border-radius: 12px;
+}
+
+.avatar-column {
+  display: grid;
+  gap: 14px;
+}
+
+/* Rounded square, ringed with the grade wheel like the header avatar. */
+.avatar {
+  aspect-ratio: 1;
+  padding: 4px;
+  background: conic-gradient(#ff3b3b, #ffd23f, #3ddc6e, #2fd0e6, #3f6bff, #d64bff, #ff3b3b);
+  border-radius: 36px;
+}
+
+.avatar img,
+.avatar-initial {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--clr-surface);
+  border-radius: 32px;
+}
+
+.avatar-initial {
+  color: var(--clr-text-secondary);
+  font-size: 64px;
+  font-weight: 300;
+}
+
+.action {
+  width: 100%;
+  justify-content: center;
+}
+
+.info {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  padding-top: 6px;
+}
+
+.name {
+  margin: 0;
+  overflow: hidden;
+  font-size: clamp(24px, 3vw, 30px);
+  font-weight: 400;
+  text-overflow: ellipsis;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--clr-text-secondary);
+  font-size: 15px;
+}
+
+.stats strong {
+  margin-right: 4px;
+  color: var(--clr-text-primary);
+  font-weight: 700;
+}
+
+.bio {
+  max-width: 60ch;
+  margin: 0;
+  color: var(--clr-text-secondary);
+  font-size: 15px;
+  line-height: 1.55;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.bio--empty {
+  color: var(--clr-text-muted);
+}
+
+.bio a,
+.links a {
+  color: var(--clr-blue-hover);
+}
+
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  margin: 0;
+  padding: 10px 14px;
+  list-style: none;
+  background: var(--clr-surface-input);
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.links li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+
+.links i {
+  color: var(--clr-text-muted);
+  font-size: 12px;
+}
+
+.links a,
+.links span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: clamp(28px, 8vw, 72px);
+  margin-top: 28px;
+  border-top: 1px solid var(--clr-border);
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -1px;
+  padding: 16px 4px;
+  background: none;
+  border: 0;
+  border-top: 2px solid transparent;
+  color: var(--clr-text-muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.tab:hover {
+  color: var(--clr-text-secondary);
+}
+
+.tab--active {
+  border-top-color: var(--clr-text-primary);
+  color: var(--clr-text-primary);
+}
+
+.tab:focus-visible {
+  outline: 2px solid var(--clr-blue-hover);
+  outline-offset: -2px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.empty-grid,
+.empty-state {
+  display: grid;
+  justify-items: center;
+  gap: 12px;
+  padding: 56px 16px;
+  color: var(--clr-text-secondary);
+  text-align: center;
+}
+
+.empty-grid i {
+  font-size: 34px;
+  color: var(--clr-text-muted);
+}
+
+.empty-grid p,
+.empty-state p {
+  margin: 0;
+}
+
+.empty-state h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 400;
+  color: var(--clr-text-primary);
+}
+
+.loading {
+  margin: 32px 0;
+  color: var(--clr-text-muted);
+  text-align: center;
+}
+
+.more {
+  display: flex;
+  margin: 24px auto 0;
+}
+
+.notice {
+  margin: 16px 0;
+  padding: 12px 16px;
+  background: var(--clr-danger-glow);
+  border: 1px solid var(--clr-danger);
+  border-radius: 6px;
+  color: var(--error-text);
+}
+
+.notice p {
+  margin: 0;
+}
+
+@media (max-width: 640px) {
+  .head {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .avatar-column {
+    width: min(184px, 60vw);
+  }
+
+  .info {
+    justify-items: center;
+  }
+
+  .stats,
+  .links {
+    justify-content: center;
+  }
+
+  .tab span {
+    display: none;
+  }
+}
+
+/* [AI-GENERATED] "Instagram · @peter": the name, then the handle in a quieter colour. */
+.links i {
+  width: 14px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.links a {
+  display: inline-flex;
+  gap: 6px;
+  min-width: 0;
+  text-decoration: none;
+}
+
+.links a:hover .link-name,
+.links a:focus-visible .link-name {
+  text-decoration: underline;
+}
+
+.links .link-name {
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.links .link-handle {
+  min-width: 0;
+  color: var(--clr-text-muted);
+}
+
+.links .link-handle::before {
+  content: '·';
+  margin-right: 6px;
+}

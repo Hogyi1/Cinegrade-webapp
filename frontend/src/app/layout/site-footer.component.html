@@ -1,35 +1,70 @@
+<!-- [AI-GENERATED] -->
 <footer class="footer">
-  <div class="rule" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
 
-  <div class="columns">
-    <section class="socials">
-      <h2>Socials</h2>
-      <ul>
-        @for (social of socials; track social.name) {
+  <div class="inner">
+    <section class="brand">
+      <a routerLink="/" aria-label="CineGrade home">
+        <img src="images/whole-cine-logo.png" alt="" width="512" height="170" />
+      </a>
+      <p class="tagline">
+        Colour grade your photos on the GPU, then share the look with other graders.
+      </p>
+      <div class="help">
+        <span>Something not working?</span>
+        <a class="report" [href]="reportLink">
+          <i class="fa-solid fa-bug" aria-hidden="true"></i>
+          Report a problem
+        </a>
+      </div>
+    </section>
+
+    <nav class="links" aria-label="Footer">
+      <section>
+        <h2>Explore</h2>
+        <ul>
+          <li><a routerLink="/">Feed</a></li>
+          <li><a routerLink="/about">About CineGrade</a></li>
           <li>
-            @if (social.url) {
-              <a [href]="social.url" rel="noopener">{{ social.name }}</a>
+            @if (downloadUrl) {
+              <a [href]="downloadUrl" download>Download for Windows</a>
             } @else {
-              <span>{{ social.name }}</span>
+              <span class="soon">Download <em>coming soon</em></span>
             }
           </li>
-        }
-      </ul>
-    </section>
+        </ul>
+      </section>
 
-    <section class="help">
-      <p class="help-line">Something not working?</p>
-      <a class="cg-btn" [href]="reportLink">Report a problem</a>
-      <p class="contact-label">Contact us at</p>
-      <a class="contact" [href]="'mailto:' + email">{{ email }}</a>
-    </section>
+      <section>
+        <h2>Your account</h2>
+        <ul>
+          @if (isLoggedIn()) {
+            <li><a [routerLink]="['/users', username()]">My profile</a></li>
+            <li><a routerLink="/account">Account settings</a></li>
+          } @else {
+            <li><a routerLink="/login">Sign in</a></li>
+            <li><a routerLink="/register">Create an account</a></li>
+            <li><a routerLink="/forgot-password">Forgot your password?</a></li>
+          }
+        </ul>
+      </section>
 
-    <section class="end">
-      <button type="button" class="top" (click)="backToTop()">
-        <i class="fa-solid fa-angles-up" aria-hidden="true"></i>
-        Back to the top
-      </button>
-      <p class="copyright">&copy; CineGrade {{ year }}</p>
-    </section>
+      <section>
+        <h2>Help</h2>
+        <ul>
+          <li><a [href]="reportLink">Report a problem</a></li>
+          <li><a [href]="'mailto:' + email">Contact us</a></li>
+          <li><a class="email" [href]="'mailto:' + email">{{ email }}</a></li>
+        </ul>
+      </section>
+    </nav>
+  </div>
+
+  <div class="bottom">
+    <p>&copy; CineGrade {{ year }}. Made for photographers who like to grade.</p>
+    <button type="button" class="top" (click)="backToTop()">
+      <i class="fa-solid fa-angles-up" aria-hidden="true"></i>
+      Back to the top
+    </button>
   </div>
 </footer>

@@ -1,12 +1,14 @@
 import { Component, ElementRef, computed, inject, signal, viewChild } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { SessionService } from '../auth/session.service';
+import { CurrentUserService } from '../auth/current-user.service';
+import { UserSearchComponent } from './user-search.component';
 import { TokenService } from '../services/token/token.service';
 import { ThemeService } from '../theme/theme.service';
 
 @Component({
   selector: 'app-site-header',
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive, UserSearchComponent],
   templateUrl: './site-header.component.html',
   styleUrl: './site-header.component.css',
   host: {
@@ -24,6 +26,8 @@ export class SiteHeaderComponent {
   readonly isLoggedIn = this.tokens.isLoggedIn;
   readonly username = this.tokens.username;
   readonly initial = computed(() => this.username()?.charAt(0).toUpperCase() ?? '?');
+  // [AI-GENERATED]
+  readonly avatarUrl = inject(CurrentUserService).avatarUrl;
   readonly isDark = computed(() => this.theme.theme() === 'dark');
   readonly menuOpen = signal(false);
 

@@ -119,7 +119,7 @@ textarea:focus-visible {
 
 .hint,
 .error,
-.not-saved {
+.saved {
   margin: 8px 0 0;
   font-size: 14px;
 }
@@ -136,7 +136,8 @@ textarea:focus-visible {
   color: var(--error-text);
 }
 
-.not-saved {
+/* [AI-GENERATED] */
+.saved {
   color: var(--clr-text-primary);
   font-weight: 600;
 }
@@ -158,5 +159,42 @@ textarea:focus-visible {
   .line:not(.line--end) {
     flex-direction: column;
     align-items: stretch;
+  }
+}
+
+/* [AI-GENERATED] Links editor */
+.links {
+  display: grid;
+  gap: 10px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.links:empty {
+  display: none;
+}
+
+/* [AI-GENERATED] Detected platform icon in front of each link input. */
+.link-icon {
+  flex-shrink: 0;
+  width: 18px;
+  font-size: 16px;
+  text-align: center;
+  color: var(--clr-text-muted);
+}
+
+.link-preview {
+  margin: 6px 0 0 30px;
+}
+
+@media (max-width: 760px) {
+  .links .line {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .link-preview {
+    margin-left: 0;
   }
 }

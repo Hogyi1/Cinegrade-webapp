@@ -3,7 +3,19 @@
     <img src="images/whole-cine-logo.png" alt="" width="512" height="170" />
   </a>
 
+  <!-- [AI-GENERATED] -->
+  <app-user-search />
+
   <div class="actions">
+    <!-- [AI-GENERATED] -->
+    <a class="nav-link nav-link--about" routerLink="/about" routerLinkActive="nav-link--active">About</a>
+    @if (isLoggedIn()) {
+      <a class="nav-link" routerLink="/upload" routerLinkActive="nav-link--active" aria-label="New post">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span class="nav-link-text">Post</span>
+      </a>
+    }
+
     <button
       type="button"
       class="theme"
@@ -27,20 +39,28 @@
           [attr.aria-expanded]="menuOpen()"
           (click)="toggleMenu()"
         >
-          <span class="avatar-face">{{ initial() }}</span>
+          <!-- [AI-GENERATED] The picture from GET /users/me; the initial until it loads or when there is none. -->
+          @if (avatarUrl(); as src) {
+            <img class="avatar-face avatar-face--photo" [src]="src" alt="" width="36" height="36" />
+          } @else {
+            <span class="avatar-face">{{ initial() }}</span>
+          }
         </button>
 
         @if (menuOpen()) {
           <div class="menu">
             <p class="menu-name">{{ username() }}</p>
+            <!-- [AI-GENERATED] -->
+            <a class="menu-item" [routerLink]="['/users', username()]" (click)="closeMenu()">My profile</a>
             <a class="menu-item" routerLink="/account" (click)="closeMenu()">My account</a>
             <button type="button" class="menu-item" (click)="logout()">Log out</button>
           </div>
         }
       </div>
     } @else {
-      <a class="cg-btn cg-btn--quiet" routerLink="/login">Sign in</a>
-      <a class="cg-btn" routerLink="/register">Sign up</a>
+      <!-- [AI-GENERATED] -->
+      <a class="auth-btn auth-btn--ghost" routerLink="/login">Sign in</a>
+      <a class="auth-btn auth-btn--solid" routerLink="/register">Sign up</a>
     }
   </div>
 </header>

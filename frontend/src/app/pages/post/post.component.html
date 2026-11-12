@@ -1,0 +1,210 @@
+<!-- [AI-GENERATED] -->
+<main class="post-page">
+  @if (loading()) {
+    <p class="state"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading</p>
+  } @else if (notFound()) {
+    <div class="state">
+      <h1>This post doesn't exist</h1>
+      <p>It may have been deleted, or the link is wrong.</p>
+      <a class="cg-btn" routerLink="/">Back to the feed</a>
+    </div>
+  } @else if (loadErrors().length) {
+    <div class="state" role="alert">
+      @for (msg of loadErrors(); track msg) {
+        <p>{{ msg }}</p>
+      }
+      <button type="button" class="cg-btn cg-btn--quiet" (click)="reload()">Try again</button>
+    </div>
+  } @else if (post(); as p) {
+    <div class="layout">
+      <section class="media-col">
+        <app-before-after
+          class="slider"
+          ratio="4 / 5"
+          [labels]="true"
+          [beforeSrc]="beforeUrl()"
+          [afterSrc]="afterUrl()"
+          [alt]="p.title ?? 'Post'"
+        />
+      </section>
+
+      <section class="info">
+        <header class="author-row">
+          <a class="author" [routerLink]="['/users', p.author?.username]">
+            @if (avatarUrl(); as src) {
+              <img class="avatar" [src]="src" alt="" width="40" height="40" />
+            } @else {
+              <span class="avatar avatar--empty" aria-hidden="true">{{ p.author?.username?.charAt(0)?.toUpperCase() }}</span>
+            }
+            <span class="author-name">{{ p.author?.username }}</span>
+          </a>
+          <span class="meta">
+            <time [attr.datetime]="p.createdAt">{{ p.createdAt | timeAgo }}</time>
+            @if (edited()) {
+              <span> · edited</span>
+            }
+          </span>
+        </header>
+
+        @if (editing()) {
+          <form class="edit" (ngSubmit)="saveEdit()" novalidate>
+            <label class="field">
+              <span class="field-label">Title</span>
+              <input
+                name="title"
+                [attr.maxlength]="maxTitle"
+                [ngModel]="editTitle()"
+                (ngModelChange)="editTitle.set($event)"
+              />
+            </label>
+            <label class="field">
+              <span class="field-label">Description</span>
+              <textarea
+                name="description"
+                rows="5"
+                [attr.maxlength]="maxDescription"
+                [ngModel]="editDescription()"
+                (ngModelChange)="editDescription.set($event)"
+              ></textarea>
+            </label>
+            <div class="field">
+              <span class="field-label">Tags</span>
+              <app-tag-picker [(selected)]="editTags" [max]="maxTags" />
+            </div>
+            @for (msg of editErrors(); track msg) {
+              <p class="error" role="alert">{{ msg }}</p>
+            }
+            <div class="btn-row">
+              <button type="button" class="cg-btn cg-btn--quiet" (click)="cancelEdit()">Cancel</button>
+              <button type="submit" class="cg-btn" [disabled]="saving()">
+                {{ saving() ? 'Saving…' : 'Save changes' }}
+              </button>
+            </div>
+          </form>
+        } @else {
+          <h1 class="title">
+            @if (p.pinned) {
+              <i class="fa-solid fa-thumbtack pin" title="Pinned to the profile" aria-label="Pinned"></i>
+            }
+            {{ p.title }}
+          </h1>
+
+          <div class="badges">
+            @if (p.colorSpace === 'REC709') {
+              <span class="tag-badge" title="The LUT outputs Rec709">Rec709</span>
+            }
+            @if (p.hasLut) {
+              <span class="tag-badge tag-badge--quiet">LUT</span>
+            }
+            @if (p.hasCgedit) {
+              <span class="tag-badge tag-badge--quiet">.cgedit</span>
+            }
+          </div>
+
+          @if (p.description) {
+            <p class="description">{{ p.description }}</p>
+          }
+
+          <app-tag-chips [tags]="p.tags ?? []" />
+        }
+
+        <div class="actions">
+          <button
+            type="button"
+            class="icon-btn"
+            [class.icon-btn--liked]="p.likedByMe"
+            [attr.aria-pressed]="p.likedByMe === true"
+            [attr.aria-label]="p.likedByMe ? 'Unlike' : 'Like'"
+            (click)="like()"
+          >
+            <i [class]="p.likedByMe ? 'fa-solid fa-heart' : 'fa-regular fa-heart'" aria-hidden="true"></i>
+            <span>{{ p.likeCount ?? 0 | compactNumber }}</span>
+          </button>
+          <span class="stat" title="Downloads">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            {{ p.downloadCount ?? 0 | compactNumber }}
+          </span>
+          <button
+            type="button"
+            class="icon-btn icon-btn--end"
+            [attr.aria-pressed]="p.savedByMe === true"
+            [attr.aria-label]="p.savedByMe ? 'Remove from saved' : 'Save'"
+            (click)="save()"
+          >
+            <i [class]="p.savedByMe ? 'fa-solid fa-bookmark' : 'fa-regular fa-bookmark'" aria-hidden="true"></i>
+          </button>
+        </div>
+
+        <div class="downloads">
+          @if (isLoggedIn()) {
+            @if (p.hasLut) {
+              <button type="button" class="cg-btn" [disabled]="downloading() !== null" (click)="download('lut')">
+                @if (downloading() === 'lut') {
+                  <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+                } @else {
+                  <i class="fa-solid fa-cube" aria-hidden="true"></i>
+                }
+                Download LUT
+              </button>
+            }
+            @if (p.hasCgedit) {
+              <button
+                type="button"
+                class="cg-btn"
+                [class.cg-btn--quiet]="p.hasLut"
+                [disabled]="downloading() !== null"
+                (click)="download('cgedit')"
+              >
+                @if (downloading() === 'cgedit') {
+                  <i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i>
+                } @else {
+                  <i class="fa-solid fa-sliders" aria-hidden="true"></i>
+                }
+                Download .cgedit
+              </button>
+            }
+          } @else {
+            <a class="cg-btn" routerLink="/login">Sign in to download</a>
+            <p class="hint">Downloads are free; you just need an account.</p>
+          }
+          @if (downloadError()) {
+            <p class="error" role="alert">{{ downloadError() }}</p>
+          }
+        </div>
+
+        @if (p.mine && !editing()) {
+          <div class="owner">
+            <h2>Your post</h2>
+            <div class="btn-row">
+              <button type="button" class="cg-btn cg-btn--quiet" (click)="startEdit()">
+                <i class="fa-solid fa-pen" aria-hidden="true"></i> Edit
+              </button>
+              <button type="button" class="cg-btn cg-btn--quiet" (click)="togglePin()">
+                <i class="fa-solid fa-thumbtack" aria-hidden="true"></i> {{ p.pinned ? 'Unpin' : 'Pin to profile' }}
+              </button>
+              @if (!confirmingDelete()) {
+                <button type="button" class="cg-btn cg-btn--quiet danger" (click)="confirmingDelete.set(true)">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i> Delete
+                </button>
+              }
+            </div>
+            @if (confirmingDelete()) {
+              <div class="confirm" role="alertdialog" aria-labelledby="confirm-text">
+                <p id="confirm-text">Delete this post and its files? This can't be undone.</p>
+                <div class="btn-row">
+                  <button type="button" class="cg-btn cg-btn--quiet" (click)="confirmingDelete.set(false)">Keep it</button>
+                  <button type="button" class="cg-btn danger-solid" [disabled]="deleting()" (click)="deletePost()">
+                    {{ deleting() ? 'Deleting…' : 'Delete post' }}
+                  </button>
+                </div>
+              </div>
+            }
+            @for (msg of ownerErrors(); track msg) {
+              <p class="error" role="alert">{{ msg }}</p>
+            }
+          </div>
+        }
+      </section>
+    </div>
+  }
+</main>

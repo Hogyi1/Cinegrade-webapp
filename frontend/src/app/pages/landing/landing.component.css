@@ -1,3 +1,4 @@
+/* [AI-GENERATED] The About page: the colour wheel hero with the logo, then the app through its screenshots. */
 :host {
   display: block;
 }
@@ -7,20 +8,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  min-height: calc(100vh - 64px);
-  min-height: calc(100dvh - 64px);
-  padding: 48px 16px 112px;
+  padding: clamp(40px, 8vh, 96px) 16px 0;
   background:
     radial-gradient(
-      ellipse farthest-corner at 50% 50%,
+      ellipse farthest-corner at 50% 38%,
       rgb(var(--neutral)) 34%,
       rgba(var(--neutral), 0.86) 58%,
       rgba(var(--neutral), 0.5) 82%,
       rgba(var(--neutral), 0.24) 100%
     ),
     conic-gradient(
-      from var(--wheel-angle) at 50% 50%,
+      from var(--wheel-angle) at 50% 38%,
       #ff3b3b,
       #ffd23f,
       #3ddc6e,
@@ -37,33 +35,28 @@
   from { --wheel-angle: 140deg; }
 }
 
-.title {
-  display: flex;
-  flex-direction: column;
-  margin: 0 0 28px;
-  font-size: clamp(44px, 11vw, 124px);
-  font-weight: 700;
-  letter-spacing: 0.26em;
-  line-height: 1.08;
+.hero-logo {
+  margin: 0 0 18px;
+  line-height: 0;
 }
 
-.title span {
-  align-self: flex-start;
+.hero-logo img {
+  width: min(560px, 82vw);
+  height: auto;
+  filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.35));
+  animation: rise 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-.title-second {
-  margin-left: 1em;
-  color: var(--clr-warning);
-}
-
-:host-context([data-theme="light"]) .title-second {
-  color: #a35f00;
+/* The light theme inverts the cream logo (theme.css); keep that and drop the dark shadow. */
+:host-context([data-theme="light"]) .hero-logo img {
+  filter: invert(1) hue-rotate(180deg);
 }
 
 .tagline {
-  margin: 0 0 32px;
+  margin: 0 0 30px;
   color: var(--clr-text-secondary);
   font-size: clamp(17px, 2vw, 21px);
+  animation: rise 900ms 120ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .hero-actions {
@@ -71,151 +64,366 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: 12px;
+  animation: rise 900ms 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-actions .cg-btn {
+  height: 46px;
+  padding: 0 26px;
+  font-size: 15px;
+}
+
+/* The develop screen rising out of the wheel, tilted back a little. */
+.hero-shot {
+  width: min(1120px, 100%);
+  margin: clamp(40px, 7vh, 72px) 0 0;
+  perspective: 1600px;
+  animation: rise 1100ms 300ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -20px 80px -20px var(--glow-blue), 0 30px 80px rgba(0, 0, 0, 0.5);
+  transform: rotateX(8deg);
+  transform-origin: 50% 100%;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
 }
 
 .sheet {
   position: relative;
-  scroll-margin-top: 80px;
+  z-index: 1;
+  scroll-margin-top: 90px;
   display: grid;
   gap: clamp(56px, 8vw, 104px);
-  margin: -64px clamp(0px, 2vw, 32px) 56px;
-  padding: clamp(40px, 7vw, 88px) clamp(20px, 7vw, 96px);
-  background: var(--clr-darkgrey);
+  margin: -48px clamp(0px, 2vw, 32px) 56px;
+  padding: clamp(40px, 7vw, 88px) clamp(20px, 6vw, 88px);
+  /* Blue and purple light in the corners */
+  background:
+    radial-gradient(60% 40% at 0% 0%, var(--glow-blue), transparent 70%),
+    radial-gradient(50% 35% at 100% 55%, var(--glow-purple), transparent 70%),
+    var(--clr-darkgrey);
   border-radius: 28px;
 }
 
+/* The blue-purple line along the top of the sheet */
+.sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0 28px auto;
+  height: 3px;
+  background: var(--grad-brand);
+  border-radius: 0 0 3px 3px;
+}
+
+h2 {
+  margin: 0 0 14px;
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+/* Small label above each heading */
+.label {
+  margin: 0 0 10px;
+  font-family: var(--font-family-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+/* The page's p colour would otherwise hide the global gradient text */
+p.cg-gradient-text {
+  color: transparent;
+}
+
+.label--light {
+  color: #c9c9ff;
+}
+
+/* ---------- Bands: a full-width screenshot behind the text, dimmed like a poster ---------- */
+
+.band {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  align-content: center;
+  min-height: 420px;
+  padding: clamp(32px, 5vw, 64px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  /* Always light text: the picture underneath is dark in both themes. */
+  color: #fff;
+}
+
+.band::before,
+.band::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+}
+
+.band::before {
+  background: var(--shot) center / cover no-repeat;
+  transform: scale(1.04);
+  filter: saturate(1.1);
+}
+
+/* Dark on the text side, fading so the screenshot shows through on the right. */
+.band::after {
+  background:
+    linear-gradient(100deg, rgba(10, 10, 20, 0.94) 0%, rgba(10, 10, 20, 0.82) 42%, rgba(10, 10, 20, 0.35) 100%),
+    radial-gradient(60% 80% at 0% 100%, rgba(91, 91, 255, 0.28), transparent 70%);
+}
+
+.band-copy {
+  max-width: 560px;
+}
+
+.band p:not(.label) {
+  margin: 0 0 24px;
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+.band--tall {
+  min-height: 0;
+}
+
+/* Centred bands are dark all over, since the text sits on top of the busiest part. */
+.grid-section::after,
+.share::after {
+  background:
+    linear-gradient(rgba(10, 10, 20, 0.86), rgba(10, 10, 20, 0.92)),
+    radial-gradient(70% 60% at 50% 0%, rgba(91, 91, 255, 0.3), transparent 70%);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  backdrop-filter: blur(6px);
+}
+
+.chips i {
+  color: #9db8ff;
+}
+
+/* ---------- Feature rows: text beside a framed screenshot ---------- */
+
 .feature {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
+  gap: clamp(28px, 5vw, 64px);
   align-items: center;
-  gap: clamp(28px, 6vw, 80px);
 }
 
 .feature--flip .copy {
   order: 2;
 }
 
-h2 {
-  margin: 0 0 14px;
-  font-size: clamp(25px, 3vw, 36px);
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-p {
-  max-width: 62ch;
-  margin: 0;
+.copy p:not(.label) {
+  margin: 0 0 18px;
   color: var(--clr-text-secondary);
   font-size: 17px;
   line-height: 1.6;
 }
 
-/* The same picture twice, cut in half. Only the filter differs. */
-.scene {
+.points {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: var(--clr-text-primary);
+  font-size: 15px;
+}
+
+.points i {
+  margin-right: 8px;
+  color: var(--clr-blue-hover);
+  font-size: 12px;
+}
+
+.shot {
   position: relative;
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-radius: 8px;
+  margin: 0;
 }
 
-.scene-art {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 68% 54%, #ffe2a8 0 6%, rgba(255, 190, 110, 0.75) 7%, transparent 34%),
-    linear-gradient(172deg, transparent 0 66%, #27362f 66.4% 100%),
-    linear-gradient(186deg, transparent 0 58%, #4c5f55 58.4% 100%),
-    linear-gradient(#5f7f9f 0%, #d9a57c 58%, #d9a57c 100%);
+.shot-main {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--clr-border);
+  border-radius: 14px;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.02);
 }
 
-.scene-art--before {
-  clip-path: inset(0 50% 0 0);
-  filter: saturate(0.3) contrast(0.72) brightness(1.08);
-}
-
-.scene-art--after {
-  clip-path: inset(0 0 0 50%);
-  filter: saturate(1.45) contrast(1.22);
-}
-
-.scene::after {
+/* A glow behind the frame in the brand colours */
+.shot::before {
   content: "";
   position: absolute;
-  inset: 0 auto 0 50%;
-  width: 2px;
-  background: #fff9ec;
+  inset: 8% 6%;
+  z-index: -1;
+  background: var(--grad-brand);
+  border-radius: 50%;
+  filter: blur(60px);
+  opacity: 0.35;
 }
 
-.scene-label {
+.shot--with-inset {
+  margin-bottom: 36px;
+}
+
+/* A tall panel (the edit sliders) standing over the bottom-right corner */
+.shot-inset {
   position: absolute;
-  bottom: 12px;
-  left: 14px;
-  color: #fff9ec;
-  font-size: 14px;
-  font-weight: 600;
+  right: -16px;
+  bottom: -36px;
+  width: 26%;
+  height: auto;
+  border: 1px solid var(--clr-border);
+  border-radius: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
 }
 
-.scene-label--after {
-  right: 14px;
-  left: auto;
+/* A wide panel (the LUT settings) along the bottom */
+.shot-inset--wide {
+  width: 62%;
 }
 
-.steps {
-  display: grid;
-  gap: 10px;
+.strip {
   margin: 0;
-  padding: 0;
-  list-style: none;
-  counter-reset: step;
+  overflow: hidden;
+  border: 1px solid var(--clr-border);
+  border-radius: 14px;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.5);
 }
 
-.steps li {
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  column-gap: 8px;
-  padding: 16px 20px;
-  background: var(--clr-surface);
-  border-radius: 8px;
-  counter-increment: step;
+.strip img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-.steps li::before {
-  content: counter(step);
-  grid-row: span 2;
-  align-self: center;
-  color: var(--clr-text-secondary);
-  font-size: 28px;
-  font-weight: 300;
-}
+/* ---------- At a glance ---------- */
 
-.steps span {
-  color: var(--clr-text-secondary);
-}
-
-.formats {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.formats li {
-  padding: 26px 20px;
-  background: var(--clr-surface);
-  border-radius: 8px;
-  font-family: var(--font-family-secondary);
-  font-size: clamp(19px, 2.4vw, 26px);
+.grid-section {
   text-align: center;
 }
 
-.share {
-  padding-top: clamp(40px, 6vw, 64px);
-  border-top: 1px solid var(--clr-border);
+.cards {
+  display: grid;
+  /* 3 + 3 on wide screens, 2 + 2 + 2 on tablets, one column on phones. */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  text-align: left;
 }
 
-@media (max-width: 760px) {
+.feature-card {
+  padding: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  backdrop-filter: blur(10px);
+  transition: transform 160ms ease, border-color 160ms ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(157, 184, 255, 0.5);
+}
+
+.feature-card-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  margin-bottom: 14px;
+  background: var(--grad-brand);
+  border-radius: 12px;
+  color: #fff;
+}
+
+.feature-card h3 {
+  margin: 0 0 6px;
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.grid-section .feature-card p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* ---------- Community ---------- */
+
+.share {
+  justify-items: center;
+  text-align: center;
+}
+
+.share p:not(.label) {
+  max-width: 620px;
+}
+
+.share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.share-actions .cg-btn {
+  height: 46px;
+  padding: 0 26px;
+}
+
+/* The quiet button sits on a dark picture in both themes. */
+.share-ghost,
+.share-ghost:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.35);
+  color: #fff;
+}
+
+.share-ghost:hover:not(:disabled) {
+  border-color: #fff;
+}
+
+@media (max-width: 860px) {
   .feature {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -224,13 +432,55 @@ p {
     order: 0;
   }
 
-  .title {
-    letter-spacing: 0.18em;
+  .shot-inset {
+    right: 8px;
+  }
+
+  .band::after {
+    background: linear-gradient(rgba(10, 10, 20, 0.86), rgba(10, 10, 20, 0.9));
+  }
+
+  .hero-shot img {
+    transform: none;
+  }
+
+  .cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .sheet {
+    margin-top: -24px;
+    border-radius: 20px;
+  }
+
+  .band {
+    min-height: 0;
+    border-radius: 18px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero {
+  .hero,
+  .hero-logo img,
+  .tagline,
+  .hero-actions,
+  .hero-shot {
     animation: none;
+  }
+
+  .feature-card {
+    transition: none;
+  }
+
+  .feature-card:hover {
+    transform: none;
   }
 }

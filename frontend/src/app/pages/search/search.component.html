@@ -1,0 +1,132 @@
+<!-- [AI-GENERATED] -->
+<main class="search">
+  <form class="bar" role="search" (ngSubmit)="submit()">
+    <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+    <input
+      type="search"
+      name="q"
+      placeholder="Search looks and people"
+      aria-label="Search looks and people"
+      autocomplete="off"
+      [ngModel]="draft()"
+      (ngModelChange)="draft.set($event)"
+    />
+    <button type="submit" class="cg-btn">Search</button>
+  </form>
+
+  <div class="controls">
+    <button
+      type="button"
+      class="chip chip--toggle"
+      [attr.aria-expanded]="filtersOpen()"
+      aria-controls="tag-filter"
+      (click)="filtersOpen.set(!filtersOpen())"
+    >
+      <i class="fa-solid fa-sliders" aria-hidden="true"></i> Tags
+      @if (tags().length) {
+        <span class="count">{{ tags().length }}</span>
+      }
+    </button>
+
+    @for (slug of tags(); track slug) {
+      <button type="button" class="chip chip--on" (click)="removeTag(slug)" [attr.aria-label]="'Remove ' + tagsStore.name(slug)">
+        {{ tagsStore.name(slug) }} <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    }
+
+    @if (hasQuery()) {
+      <button type="button" class="link-btn" (click)="clearAll()">Clear all</button>
+    }
+
+    <div class="sort" role="group" aria-label="Sort posts">
+      <button type="button" [class.sort--on]="sort() === 'new'" [attr.aria-pressed]="sort() === 'new'" (click)="setSort('new')">
+        Newest
+      </button>
+      <button
+        type="button"
+        [class.sort--on]="sort() === 'popular'"
+        [attr.aria-pressed]="sort() === 'popular'"
+        (click)="setSort('popular')"
+      >
+        Most liked
+      </button>
+    </div>
+  </div>
+
+  @if (filtersOpen()) {
+    <section id="tag-filter" class="filter-panel">
+      <p class="hint">Posts must have every tag you pick.</p>
+      <app-tag-picker [selected]="tags()" (selectedChange)="setTags($event)" [max]="null" />
+    </section>
+  }
+
+  @if (users().length) {
+    <section class="people" aria-labelledby="people-h">
+      <h2 id="people-h">People</h2>
+      <ul>
+        @for (user of users(); track user.username) {
+          <li>
+            <a class="person" [routerLink]="['/users', user.username]">
+              @if (file(user.avatarFileId); as src) {
+                <img class="avatar" [src]="src" alt="" width="56" height="56" />
+              } @else {
+                <span class="avatar avatar--empty" aria-hidden="true">{{ user.username?.charAt(0)?.toUpperCase() }}</span>
+              }
+              <span class="name">{{ user.username }}</span>
+              <span class="followers">{{ user.followerCount ?? 0 | compactNumber }} followers</span>
+            </a>
+          </li>
+        }
+      </ul>
+    </section>
+  }
+
+  <section aria-labelledby="posts-h">
+    <h2 id="posts-h" class="posts-head">
+      @if (hasQuery()) {
+        Posts
+        @if (total() !== null) {
+          <span class="total">{{ total() | compactNumber }}</span>
+        }
+      } @else {
+        Latest posts
+      }
+    </h2>
+
+    @if (posts().length) {
+      <div class="grid">
+        @for (post of posts(); track post.id) {
+          <app-post-tile [post]="post" />
+        }
+      </div>
+    }
+
+    @if (errors().length) {
+      <div class="notice" role="alert">
+        @for (msg of errors(); track msg) {
+          <p>{{ msg }}</p>
+        }
+        <button type="button" class="cg-btn cg-btn--quiet" (click)="loadMore()">Try again</button>
+      </div>
+    }
+
+    @if (!loading() && !errors().length && posts().length === 0) {
+      <div class="empty">
+        @if (hasQuery()) {
+          <p>No posts match{{ q() ? ' "' + q() + '"' : '' }}{{ tags().length ? ' with those tags' : '' }}.</p>
+          @if (tags().length > 1) {
+            <p class="hint">Try removing a tag: posts must have all of them.</p>
+          }
+        } @else {
+          <p>No one has posted yet.</p>
+        }
+      </div>
+    }
+
+    @if (loading()) {
+      <p class="loading"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading</p>
+    } @else if (!lastPage() && !errors().length) {
+      <div class="sentinel" (appInView)="loadMore()"></div>
+    }
+  </section>
+</main>

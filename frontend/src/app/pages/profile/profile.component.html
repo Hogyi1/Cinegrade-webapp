@@ -1,0 +1,144 @@
+<!-- [AI-GENERATED] -->
+<main class="page">
+  @if (notFound()) {
+    <section class="empty-state">
+      <h1>This profile isn't available</h1>
+      <p>The account doesn't exist, or it isn't active any more.</p>
+      <a class="cg-btn" routerLink="/">Back to the feed</a>
+    </section>
+  } @else if (loadErrors().length) {
+    <div class="notice" role="alert">
+      @for (msg of loadErrors(); track msg) {
+        <p>{{ msg }}</p>
+      }
+    </div>
+  } @else if (profile(); as p) {
+    <section class="head">
+      <div class="avatar-column">
+        <div class="avatar">
+          @if (avatarUrl(); as src) {
+            <img [src]="src" [alt]="p.username + ' profile picture'" width="184" height="184" />
+          } @else {
+            <span class="avatar-initial" aria-hidden="true">{{ initial() }}</span>
+          }
+        </div>
+        @if (isMe()) {
+          <a class="cg-btn cg-btn--quiet action" routerLink="/account">Edit profile</a>
+        } @else {
+          <button
+            type="button"
+            class="cg-btn action"
+            [class.cg-btn--quiet]="p.following"
+            [disabled]="followBusy()"
+            [attr.aria-pressed]="p.following === true"
+            (click)="toggleFollow()"
+          >
+            {{ p.following ? 'Following' : 'Follow' }}
+          </button>
+        }
+      </div>
+
+      <div class="info">
+        <h1 class="name">{{ p.username }}</h1>
+
+        <ul class="stats">
+          <li><strong>{{ p.postCount | compactNumber }}</strong> posts</li>
+          <li><strong>{{ p.followerCount | compactNumber }}</strong> followers</li>
+          <li><strong>{{ p.followingCount | compactNumber }}</strong> following</li>
+        </ul>
+
+        @if (p.description) {
+          <p class="bio">{{ p.description }}</p>
+        } @else if (isMe()) {
+          <p class="bio bio--empty">Add a few words about your style on <a routerLink="/account">your account page</a>.</p>
+        }
+
+        @if (links().length) {
+          <ul class="links">
+            <!-- [AI-GENERATED] Icon and handle come from the URL itself. -->
+            @for (link of links(); track $index) {
+              <li [title]="link.href ?? link.label">
+                <i [class]="link.icon" aria-hidden="true"></i>
+                @if (link.href) {
+                  <a [href]="link.href" target="_blank" rel="noopener noreferrer nofollow" [attr.aria-label]="link.label">
+                    <span class="link-name">{{ link.name }}</span>
+                    @if (link.handle) {
+                      <span class="link-handle">{{ link.handle }}</span>
+                    }
+                  </a>
+                } @else {
+                  <span>{{ link.label }}</span>
+                }
+              </li>
+            }
+          </ul>
+        }
+      </div>
+    </section>
+
+    <nav class="tabs" role="tablist" aria-label="Profile sections">
+      <button
+        type="button"
+        role="tab"
+        class="tab"
+        [class.tab--active]="tab() === 'posts'"
+        [attr.aria-selected]="tab() === 'posts'"
+        (click)="selectTab('posts')"
+      >
+        <i class="fa-solid fa-table-cells" aria-hidden="true"></i> Posts
+      </button>
+      @if (isMe()) {
+        <button
+          type="button"
+          role="tab"
+          class="tab"
+          [class.tab--active]="tab() === 'saved'"
+          [attr.aria-selected]="tab() === 'saved'"
+          (click)="selectTab('saved')"
+        >
+          <i class="fa-regular fa-bookmark" aria-hidden="true"></i> Saved
+        </button>
+      }
+    </nav>
+
+    <section class="grid-section" role="tabpanel">
+      @if (postErrors().length) {
+        <div class="notice" role="alert">
+          @for (msg of postErrors(); track msg) {
+            <p>{{ msg }}</p>
+          }
+        </div>
+      }
+
+      <div class="grid">
+        @for (post of items(); track post.id) {
+          <app-post-tile [post]="post" />
+        }
+      </div>
+
+      @if (!loadingPosts() && !postErrors().length && items().length === 0) {
+        <div class="empty-grid">
+          @if (tab() === 'saved') {
+            <i class="fa-regular fa-bookmark" aria-hidden="true"></i>
+            <p>Posts you save show up here. Only you can see them.</p>
+          } @else if (isMe()) {
+            <i class="fa-regular fa-images" aria-hidden="true"></i>
+            <p>Share your first grade.</p>
+            <a class="cg-btn" routerLink="/upload">New post</a>
+          } @else {
+            <i class="fa-regular fa-images" aria-hidden="true"></i>
+            <p>{{ p.username }} hasn't posted yet.</p>
+          }
+        </div>
+      }
+
+      @if (loadingPosts()) {
+        <p class="loading"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading</p>
+      } @else if (!lastPage() && items().length) {
+        <button type="button" class="cg-btn cg-btn--quiet more" (click)="loadMore()">Show more</button>
+      }
+    </section>
+  } @else {
+    <p class="loading"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading</p>
+  }
+</main>

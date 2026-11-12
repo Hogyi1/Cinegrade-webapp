@@ -1,70 +1,108 @@
+<!-- [AI-GENERATED] The About page: the logo over the colour wheel, then the app shown through its own screenshots. -->
 <main>
   <section class="hero">
-    <h1 class="title" aria-label="CineGrade">
-      <span aria-hidden="true">CINE</span>
-      <span class="title-second" aria-hidden="true">GRADE</span>
+    <h1 class="hero-logo">
+      <img src="images/whole-cine-logo.png" alt="CineGrade" width="512" height="170" />
     </h1>
     <p class="tagline">Colour grade your photos on the GPU, then share the look.</p>
     <div class="hero-actions">
-      <button type="button" class="cg-btn" disabled>Download coming soon</button>
+      <!-- Open to everyone, no sign-in needed. -->
+      @if (downloadUrl) {
+        <a class="cg-btn cg-btn--brand" [href]="downloadUrl" download>
+          <i class="fa-solid fa-download" aria-hidden="true"></i>&nbsp; Download the app
+        </a>
+      } @else {
+        <button type="button" class="cg-btn" disabled>Download coming soon</button>
+      }
       <button type="button" class="cg-btn cg-btn--quiet" (click)="showAbout()">See what it does</button>
     </div>
+
+    <figure class="hero-shot">
+      <img
+        [src]="shots.hero"
+        alt="CineGrade's develop screen grading a photo of a skater, with the colour mixer open"
+        width="1908"
+        height="1005"
+      />
+    </figure>
   </section>
 
   <div class="sheet" #about>
-    <section class="feature">
-      <div class="copy">
-        <h2>Your originals stay untouched</h2>
+    <!-- A full-width screenshot behind the pitch, like a poster. -->
+    <section class="band" [style.--shot]="'url(' + shots.band + ')'">
+      <div class="band-copy">
+        <p class="label label--light">The desktop app</p>
+        <h2>A darkroom on your desktop</h2>
         <p>
-          CineGrade is a desktop app for grading photos. Every adjustment runs on your graphics card
-          through OpenGL and is stored as an edit, so you can undo it or start over at any time.
+          Import a shoot, grade it with tools that answer instantly, and export the result. CineGrade keeps the
+          whole job in one window, and never touches your originals.
         </p>
-      </div>
-      <div class="scene" role="img" aria-label="An illustrated landscape, flat on the left and graded on the right">
-        <div class="scene-art scene-art--before"></div>
-        <div class="scene-art scene-art--after"></div>
-        <span class="scene-label">Before</span>
-        <span class="scene-label scene-label--after">After</span>
+        <ul class="chips">
+          <li><i class="fa-solid fa-bolt" aria-hidden="true"></i> GPU powered</li>
+          <li><i class="fa-solid fa-shield-halved" aria-hidden="true"></i> Non-destructive</li>
+          <li><i class="fa-solid fa-cube" aria-hidden="true"></i> LUT export</li>
+        </ul>
       </div>
     </section>
 
-    <section class="feature feature--flip">
-      <div class="copy">
-        <h2>One path from import to export</h2>
-        <p>
-          Bring in a shoot, rate and label the keepers, and compare before and after with one shortcut.
-          Copy an edit from one photo and paste it onto the next.
-        </p>
-      </div>
-      <ol class="steps">
-        <li><strong>Import</strong><span>Pick the photos for a project</span></li>
-        <li><strong>Develop</strong><span>Grade, rate and compare</span></li>
-        <li><strong>Export</strong><span>Write the finished files</span></li>
-      </ol>
-    </section>
+    @for (row of rows; track row.label; let odd = $odd) {
+      <section class="feature" [class.feature--flip]="odd">
+        <div class="copy">
+          <p class="label cg-gradient-text">{{ row.label }}</p>
+          <h2>{{ row.title }}</h2>
+          <p>{{ row.text }}</p>
+          <ul class="points">
+            @for (point of row.points; track point) {
+              <li><i class="fa-solid fa-check" aria-hidden="true"></i> {{ point }}</li>
+            }
+          </ul>
+        </div>
+        <figure class="shot" [class.shot--with-inset]="row.inset">
+          <img class="shot-main" [src]="row.shot" [alt]="row.alt" loading="lazy" decoding="async" />
+          @if (row.inset; as inset) {
+            <img class="shot-inset" [class.shot-inset--wide]="inset.wide" [src]="inset.shot" [alt]="inset.alt" loading="lazy" decoding="async" />
+          }
+        </figure>
+      </section>
+    }
 
-    <section class="feature">
-      <div class="copy">
-        <h2>Take the look with you</h2>
-        <p>
-          Save a grade as a preset for your next project. Export finished photos as JPEG or TIFF, or
-          turn the grade into a 3D LUT that other software can load.
-        </p>
-      </div>
-      <ul class="formats">
-        <li>.jpeg</li>
-        <li>.tiff</li>
-        <li>.cube</li>
-        <li>.cgedit</li>
+    <!-- The filmstrip as a thin strip across the sheet. -->
+    <figure class="strip">
+      <img
+        [src]="shots.filmstrip"
+        alt="The filmstrip with star ratings, colour labels and a note on one photo"
+        loading="lazy"
+        decoding="async"
+      />
+    </figure>
+
+    <section class="grid-section band band--tall" [style.--shot]="'url(' + shots.grid + ')'">
+      <p class="label label--light">At a glance</p>
+      <h2>Everything a grade needs</h2>
+      <ul class="cards">
+        @for (feature of features; track feature.title) {
+          <li class="feature-card">
+            <span class="feature-card-icon"><i class="fa-solid {{ feature.icon }}" aria-hidden="true"></i></span>
+            <h3>{{ feature.title }}</h3>
+            <p>{{ feature.text }}</p>
+          </li>
+        }
       </ul>
     </section>
 
-    <section class="share">
+    <section class="share band" [style.--shot]="'url(' + shots.share + ')'">
+      <p class="label label--light">The community</p>
       <h2>A place to share your grades</h2>
       <p>
-        The CineGrade community is on its way. You'll be able to post your edits and LUTs here, and
-        download looks from other people straight into the app.
+        Post your edits and Rec. 709 LUTs with a before and after, follow the graders you like, and save looks to try
+        later. Sign in to download other people's grades into the app.
       </p>
+      <div class="share-actions">
+        <a class="cg-btn cg-btn--brand" routerLink="/">Browse the feed</a>
+        @if (!isLoggedIn()) {
+          <a class="cg-btn cg-btn--quiet share-ghost" routerLink="/register">Create an account</a>
+        }
+      </div>
     </section>
   </div>
 </main>
