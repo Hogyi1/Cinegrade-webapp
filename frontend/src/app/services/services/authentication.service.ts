@@ -14,6 +14,8 @@ import { StrictHttpResponse } from '../strict-http-response';
 import { activate } from '../fn/authentication/activate';
 import { Activate$Params } from '../fn/authentication/activate';
 import { AuthenticationResponse } from '../models/authentication-response';
+import { forgotPassword } from '../fn/authentication/forgot-password';
+import { ForgotPassword$Params } from '../fn/authentication/forgot-password';
 import { isUsernameAvailable } from '../fn/authentication/is-username-available';
 import { IsUsernameAvailable$Params } from '../fn/authentication/is-username-available';
 import { login } from '../fn/authentication/login';
@@ -26,6 +28,8 @@ import { register } from '../fn/authentication/register';
 import { Register$Params } from '../fn/authentication/register';
 import { resend } from '../fn/authentication/resend';
 import { Resend$Params } from '../fn/authentication/resend';
+import { resetPassword } from '../fn/authentication/reset-password';
+import { ResetPassword$Params } from '../fn/authentication/reset-password';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService extends BaseService {
@@ -134,6 +138,56 @@ export class AuthenticationService extends BaseService {
   login(params: Login$Params, context?: HttpContext): Observable<AuthenticationResponse> {
     return this.login$Response(params, context).pipe(
       map((r: StrictHttpResponse<AuthenticationResponse>): AuthenticationResponse => r.body)
+    );
+  }
+
+  /** Path part for operation `forgotPassword()` */
+  static readonly ForgotPasswordPath = '/auth/forgot-password';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `forgotPassword()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  forgotPassword$Response(params: ForgotPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return forgotPassword(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `forgotPassword$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  forgotPassword(params: ForgotPassword$Params, context?: HttpContext): Observable<void> {
+    return this.forgotPassword$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
+    );
+  }
+
+  /** Path part for operation `resetPassword()` */
+  static readonly ResetPasswordPath = '/auth/forgot-password/reset';
+
+  /**
+   * This method provides access to the full `HttpResponse`, allowing access to response headers.
+   * To access only the response body, use `resetPassword()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  resetPassword$Response(params: ResetPassword$Params, context?: HttpContext): Observable<StrictHttpResponse<void>> {
+    return resetPassword(this.http, this.rootUrl, params, context);
+  }
+
+  /**
+   * This method provides access only to the response body.
+   * To access the full response (for headers, for example), `resetPassword$Response()` instead.
+   *
+   * This method sends `application/json` and handles request body of type `application/json`.
+   */
+  resetPassword(params: ResetPassword$Params, context?: HttpContext): Observable<void> {
+    return this.resetPassword$Response(params, context).pipe(
+      map((r: StrictHttpResponse<void>): void => r.body)
     );
   }
 

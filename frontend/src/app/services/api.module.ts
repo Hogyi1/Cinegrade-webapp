@@ -6,8 +6,12 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { HttpClient } from '@angular/common/http';
 import { ApiConfiguration, ApiConfigurationParams } from './api-configuration';
 
+import { UsersService } from './services/users.service';
+import { PostsService } from './services/posts.service';
 import { AuthenticationService } from './services/authentication.service';
-import { PostControllerService } from './services/post-controller.service';
+import { TagsService } from './services/tags.service';
+import { SearchService } from './services/search.service';
+import { FilesService } from './services/files.service';
 
 /**
  * Module that provides all services and configuration.
@@ -17,8 +21,12 @@ import { PostControllerService } from './services/post-controller.service';
   exports: [],
   declarations: [],
   providers: [
+    UsersService,
+    PostsService,
     AuthenticationService,
-    PostControllerService,
+    TagsService,
+    SearchService,
+    FilesService,
     ApiConfiguration
   ],
 })
