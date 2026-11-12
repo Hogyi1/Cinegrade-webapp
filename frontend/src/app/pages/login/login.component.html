@@ -1,3 +1,30 @@
+<!-- [AI-GENERATED] Split layout: the app on the left, the sign-in form on the right. -->
+<div class="split">
+<section class="showcase" aria-label="What CineGrade does">
+  <a class="showcase-logo" routerLink="/about" aria-label="About CineGrade">
+    <img src="images/whole-cine-logo.png" alt="" width="512" height="170" />
+  </a>
+  <h2 class="showcase-title">
+    Grade it on the <span class="hl hl--warm">GPU</span>.<br />
+    Share the <span class="hl hl--cool">look</span>.
+  </h2>
+  <div class="window" aria-hidden="false">
+    <div class="window-bar" aria-hidden="true">
+      <span></span><span></span><span></span>
+      <p>CineGrade · Develop</p>
+    </div>
+    <!-- [AI-GENERATED] A real grade from the app: the flat original and the graded version. -->
+    <app-before-after
+      ratio="738 / 680"
+      [labels]="true"
+      beforeSrc="images/app/login-before.jpg"
+      afterSrc="images/app/login-after.jpg"
+      alt="A skater sitting among painted ribbons in a skate park"
+    />
+  </div>
+  <p class="showcase-note">Drag the line to compare. Post your grades and Rec. 709 LUTs, and follow the graders you like.</p>
+</section>
+
 <main class="auth-card" [class.auth-card--busy]="submitting()">
   <section class="brand">
     <img class="logo" src="images/whole-cine-logo.png" alt="CineGrade" width="512" height="170" />
@@ -9,6 +36,11 @@
     @if (activated()) {
       <div class="notice notice--ok" role="status">
         <p>Your account is activated. Sign in to continue.</p>
+      </div>
+    }
+    @if (passwordReset()) {
+      <div class="notice notice--ok" role="status">
+        <p>Your password is changed. Sign in with the new one.</p>
       </div>
     }
     @if (needsActivation()) {
@@ -73,6 +105,9 @@
         @if (passwordError()) {
           <p class="field-error" id="password-error">{{ passwordError() }}</p>
         }
+        <p class="hint">
+          <a class="link" routerLink="/forgot-password" [state]="{ email: login().includes('@') ? login().trim() : '' }">Forgot your password?</a>
+        </p>
       </div>
 
       <div class="actions">
@@ -89,3 +124,4 @@
     </form>
   </section>
 </main>
+</div>

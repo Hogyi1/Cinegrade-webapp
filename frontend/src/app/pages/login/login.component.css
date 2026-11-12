@@ -1,0 +1,143 @@
+/* [AI-GENERATED] Login only: the app showcase on the left, the form card on the right.
+   Loaded after auth-page.css, so these rules win where they overlap. */
+
+:host {
+  place-items: stretch;
+  padding: 0;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(360px, 1fr);
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.showcase {
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 28px;
+  padding: 48px clamp(24px, 5vw, 72px);
+  background: rgba(18, 19, 22, 0.82);
+  border-right: 1px solid rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(2px);
+}
+
+.showcase-logo {
+  justify-self: start;
+}
+
+.showcase-logo img {
+  display: block;
+  width: 150px;
+  height: auto;
+}
+
+.showcase-title {
+  margin: 0;
+  color: #fff9ec;
+  font-size: clamp(30px, 3.4vw, 46px);
+  font-weight: 300;
+  line-height: 1.15;
+  text-align: center;
+}
+
+.hl {
+  font-weight: 600;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hl--warm {
+  background-image: linear-gradient(90deg, #ffd23f, #ff3b3b);
+}
+
+.hl--cool {
+  background-image: linear-gradient(90deg, #2fd0e6, #d64bff);
+}
+
+/* A desktop window drawn in CSS around a real before/after from the app. */
+.window {
+  width: min(100%, 560px);
+  overflow: hidden;
+  background: #1c1e22;
+  border: 1px solid #383c44;
+  border-radius: 10px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+  transform: perspective(1400px) rotateY(6deg) rotateX(2deg);
+}
+
+.window-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 12px;
+  background: #24262a;
+  border-bottom: 1px solid #383c44;
+}
+
+.window-bar span {
+  width: 10px;
+  height: 10px;
+  background: #383c44;
+  border-radius: 50%;
+}
+
+.window-bar p {
+  margin: 0 0 0 10px;
+  color: #848484;
+  font-size: 12px;
+}
+
+.showcase-note {
+  max-width: 46ch;
+  margin: 0;
+  color: #aab8c2;
+  font-size: 15px;
+  line-height: 1.55;
+  text-align: center;
+}
+
+/* The form side keeps the colour-wheel background from auth-page.css showing through. */
+.auth-card {
+  grid-template-columns: minmax(0, 1fr);
+  align-self: center;
+  justify-self: center;
+  gap: 26px;
+  width: calc(100% - 48px);
+  max-width: 420px;
+  margin: 48px 0;
+  padding: 36px 0;
+}
+
+.panel {
+  padding: 0 36px;
+}
+
+.brand {
+  padding: 0 36px;
+}
+
+.brand .logo {
+  display: none;
+}
+
+@media (max-width: 900px) {
+  .split {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .showcase {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .window {
+    transform: none;
+  }
+}

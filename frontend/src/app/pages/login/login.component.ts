@@ -1,9 +1,11 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { businessErrorCode, errorMessages } from '../../shared/api-error';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthenticationService } from '../../services/services';
 import { TokenService } from '../../services/token/token.service';
+import { BeforeAfterComponent } from '../../shared/before-after.component';
 
 // Values of BusinessErrorCodes.java
 const ACCOUNT_LOCKED = 302;
@@ -12,9 +14,10 @@ const BAD_CREDENTIALS = 304;
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, RouterLink],
+  // [AI-GENERATED] BeforeAfterComponent and login.component.css are for the split layout.
+  imports: [FormsModule, RouterLink, BeforeAfterComponent],
   templateUrl: './login.component.html',
-  styleUrl: '../auth-page.css',
+  styleUrls: ['../auth-page.css', './login.component.css'],
 })
 export class LoginComponent {
   private readonly router = inject(Router);
@@ -29,6 +32,7 @@ export class LoginComponent {
   readonly errorMsg = signal<string[]>([]);
   readonly needsActivation = signal(false);
   readonly activated = signal<boolean>(history.state?.activated === true);
+  readonly passwordReset = signal<boolean>(history.state?.passwordReset === true);
 
   private readonly submitted = signal(false);
 
@@ -51,6 +55,7 @@ export class LoginComponent {
     this.errorMsg.set([]);
     this.needsActivation.set(false);
     this.activated.set(false);
+    this.passwordReset.set(false);
     if (this.loginError() || this.passwordError()) {
       return;
     }
@@ -72,31 +77,21 @@ export class LoginComponent {
     this.router.navigate(['/']);
   }
 
+  // [AI-GENERATED] Uses the shared api-error helpers.
   onLoginError(err: HttpErrorResponse): void {
     this.submitting.set(false);
 
-    const validationErrors: string[] | undefined = err.error?.validationErrors;
-    if (validationErrors?.length) {
-      this.errorMsg.set(validationErrors);
-      return;
-    }
-    if (err.status === 0) {
-      this.errorMsg.set(["Can't reach CineGrade. Check your connection and try again."]);
-      return;
-    }
-
-    switch (err.error?.businessErrorCode) {
+    switch (businessErrorCode(err)) {
       case ACCOUNT_DISABLED:
         this.needsActivation.set(true);
-        break;
+        return;
       case BAD_CREDENTIALS:
         this.errorMsg.set(["That login and password don't match. Check them and try again."]);
-        break;
+        return;
       case ACCOUNT_LOCKED:
         this.errorMsg.set(['This account is locked, so it can’t sign in.']);
-        break;
-      default:
-        this.errorMsg.set(['Sign-in failed on the server. Try again in a moment.']);
+        return;
     }
+    this.errorMsg.set(errorMessages(err, 'Sign-in failed on the server. Try again in a moment.'));
   }
 }

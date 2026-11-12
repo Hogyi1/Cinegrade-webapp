@@ -215,22 +215,27 @@
   min-width: 170px;
   height: 44px;
   padding: 0 24px;
-  background: var(--cream);
+  /* [AI-GENERATED] The same gradient pill as Sign up in the header. */
+  background: var(--grad-brand);
   border: 0;
-  border-radius: 4px;
-  color: rgb(var(--neutral));
+  border-radius: 999px;
+  box-shadow: 0 6px 18px -6px var(--clr-violet), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  color: #fff;
   font: inherit;
+  font-family: var(--font-family-display);
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
+  transition: box-shadow 160ms ease, filter 160ms ease;
 }
 
 .submit:hover:not(:disabled) {
-  background: var(--cream-hover);
+  box-shadow: 0 10px 26px -6px var(--clr-violet), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  filter: brightness(1.08);
 }
 
 .submit:active:not(:disabled) {
-  background: var(--cream-active);
+  filter: brightness(0.95);
 }
 
 .submit:disabled {

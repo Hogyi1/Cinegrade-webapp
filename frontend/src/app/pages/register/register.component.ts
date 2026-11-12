@@ -1,19 +1,14 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { errorBody, errorMessages } from '../../shared/api-error';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { USERNAME_PATTERN, USERNAME_RULE } from '../../auth/username-rule';
+import { meetsPasswordRule } from '../../auth/password-rule';
 import { AuthenticationService } from '../../services/services';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MIN_PASSWORD_LENGTH = 8;
 const AVAILABILITY_DELAY_MS = 350;
-
-// Keep in step with the @Size and @Pattern rules on RegistrationRequest.password.
-function meetsPasswordRule(password: string): boolean {
-  const digits = password.match(/\d/g)?.length ?? 0;
-  return password.length >= MIN_PASSWORD_LENGTH && digits >= 2 && /[^a-zA-Z0-9\s]/.test(password);
-}
 
 type UsernameStatus = 'idle' | 'checking' | 'available' | 'taken';
 
@@ -138,21 +133,18 @@ export class RegisterComponent {
     this.router.navigate(['activate-account'], { state: { email: this.email().trim() } });
   }
 
+  // [AI-GENERATED] Uses the shared api-error helpers.
   onRegisterError(err: HttpErrorResponse): void {
     this.submitting.set(false);
 
-    const validationErrors: string[] | undefined = err.error?.validationErrors;
-    if (validationErrors?.length) {
-      this.errorMsg.set(validationErrors);
-    } else if (err.status === 0) {
-      this.errorMsg.set(["Can't reach CineGrade. Check your connection and try again."]);
-    } else if (err.status === 409) {
+    if (err.status === 409 && !errorBody(err)?.validationErrors?.length) {
       this.errorMsg.set([
-        err.error?.businessErrorDescription ?? 'That username or email is already registered. Sign in, or use a different one.',
+        errorBody(err)?.businessErrorDescription ??
+          'That username or email is already registered. Sign in, or use a different one.',
       ]);
-    } else {
-      this.errorMsg.set(['Account creation failed on the server. Try again in a moment.']);
+      return;
     }
+    this.errorMsg.set(errorMessages(err, 'Account creation failed on the server. Try again in a moment.'));
   }
 
   private checkAvailability(username: string): void {

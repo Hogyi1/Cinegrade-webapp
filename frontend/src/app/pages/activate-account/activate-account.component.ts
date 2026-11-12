@@ -1,4 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
+import { CONNECTION_ERROR, errorBody, errorMessages } from '../../shared/api-error';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -22,8 +23,7 @@ export class ActivateAccountComponent {
   private readonly query = inject(ActivatedRoute).snapshot.queryParamMap;
   private readonly authService = inject(AuthenticationService);
 
-  // Filled from the email link, or from the register page. Never submits by itself,
-  // because mail scanners open links and would use up the code.
+  // Filled from the email link, or from the register page.
   readonly email = signal<string>(this.query.get('email') ?? history.state?.email ?? '');
   readonly code = signal(digitsOnly(this.query.get('code') ?? ''));
   readonly submitting = signal(false);
@@ -33,6 +33,15 @@ export class ActivateAccountComponent {
 
   private readonly emailChecked = signal(false);
   private readonly codeChecked = signal(false);
+
+  constructor() {
+    // Opened from the email link: activate straight away, no typing needed.
+    // The link itself only opens this page; the activation is a POST sent from here.
+    // Mail scanners download links but mostly don't run the page's script, so they don't activate anything.
+    if (this.query.get('email') && this.query.get('code')) {
+      this.submit();
+    }
+  }
 
   readonly emailError = computed(() => {
     if (!this.emailChecked()) {
@@ -103,24 +112,24 @@ export class ActivateAccountComponent {
     this.router.navigate(['login'], { state: { activated: true, login: this.email().trim() } });
   }
 
+  // [AI-GENERATED] Uses the shared api-error helpers.
   onActivateError(err: HttpErrorResponse): void {
     this.submitting.set(false);
 
     const body = errorBody(err);
-    const validationErrors: string[] | undefined = body?.validationErrors;
-    if (validationErrors?.length) {
-      this.errorMsg.set(validationErrors);
-    } else if (err.status === 0) {
-      this.errorMsg.set(["Can't reach CineGrade. Check your connection and try again."]);
-    } else if (body?.businessErrorCode === ACTIVATION_ATTEMPTS_EXCEEDED) {
-      this.code.set('');
-      this.errorMsg.set(['Too many wrong codes. Send yourself a new code and try again.']);
-    } else if (body?.businessErrorCode === ACTIVATION_CODE_EXPIRED) {
-      this.code.set('');
-      this.errorMsg.set([body.businessErrorDescription]);
-    } else {
-      this.errorMsg.set([body?.businessErrorDescription ?? 'Activation failed on the server. Try again in a moment.']);
+    switch (body?.businessErrorCode) {
+      case ACTIVATION_ATTEMPTS_EXCEEDED:
+        this.code.set('');
+        this.errorMsg.set(['Too many wrong codes. Send yourself a new code and try again.']);
+        return;
+      case ACTIVATION_CODE_EXPIRED:
+        this.code.set('');
+        this.errorMsg.set([body.businessErrorDescription ?? 'That code has expired. We sent a new one to your email.']);
+        return;
     }
+    this.errorMsg.set(
+      errorMessages(err, body?.businessErrorDescription ?? 'Activation failed on the server. Try again in a moment.'),
+    );
   }
 
   onResent(): void {
@@ -128,25 +137,10 @@ export class ActivateAccountComponent {
     this.resent.set(true);
   }
 
+  // [AI-GENERATED] Uses the shared api-error helpers.
   onResendError(err: HttpErrorResponse): void {
     this.resending.set(false);
-    this.errorMsg.set([
-      err.status === 0
-        ? "Can't reach CineGrade. Check your connection and try again."
-        : "We couldn't send a new code. Try again in a moment.",
-    ]);
-  }
-}
-
-// The generated client reads responses of void endpoints as text, so errors arrive unparsed.
-function errorBody(err: HttpErrorResponse): any {
-  if (typeof err.error !== 'string') {
-    return err.error;
-  }
-  try {
-    return JSON.parse(err.error);
-  } catch {
-    return null;
+    this.errorMsg.set([err.status === 0 ? CONNECTION_ERROR : "We couldn't send a new code. Try again in a moment."]);
   }
 }
 
