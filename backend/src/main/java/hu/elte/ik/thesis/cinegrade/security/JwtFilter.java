@@ -37,7 +37,7 @@ public class JwtFilter extends OncePerRequestFilter { // Minden kérésnél egys
         }
         try {
             String jwt = authHeader.substring(7);
-            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtService.extractUsername(jwt));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(jwtService.extractSubject(jwt));
             if (userDetails.isEnabled() && userDetails.isAccountNonLocked() && jwtService.isTokenValid(jwt, userDetails)) {
                 var authToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

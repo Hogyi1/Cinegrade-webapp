@@ -1,5 +1,6 @@
-package hu.elte.ik.thesis.cinegrade.user;
+package hu.elte.ik.thesis.cinegrade.auth.activation;
 
+import hu.elte.ik.thesis.cinegrade.user.User;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;

@@ -12,6 +12,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import hu.elte.ik.thesis.cinegrade.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -28,12 +29,12 @@ public class JwtService {
 	private String secretKey;
 
 	/**
-	 * Kinyeri a felhasználónevet a JWT tokenből.
+	 * Kinyeri a JWT token subject-jét (a felhasználó e-mail címét).
 	 * 
 	 * @param token A vizsgált JWT token
-	 * @return A felhasználó neve (username)
+	 * @return A felhasználó e-mail címe
 	 */
-	public String extractUsername(String token) {
+	public String extractSubject(String token) {
 		return extractClaim(token, Claims::getSubject);
 	}
 
@@ -95,7 +96,8 @@ public class JwtService {
 		var authorities = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
 
 		return Jwts.builder().claims(extraClaims) // Extra adatok beállítása
-				.subject(userDetails.getUsername()) // Felhasználónév beállítása
+				// The email, not the username: emails never change, so an old token can't match a user who later takes a freed username
+				.subject(subjectOf(userDetails))
 				.issuedAt(new Date(System.currentTimeMillis())) // Token kiállítási idő
 				.expiration(new Date(System.currentTimeMillis() + jwtExpiration)) // Lejárati idő beállítása
 				.claim("authorities", authorities) // Jogosultságok hozzáadása a tokenhez
@@ -111,8 +113,12 @@ public class JwtService {
 	 * @return Igaz, ha a token érvényes, hamis, ha nem
 	 */
 	public boolean isTokenValid(String token, UserDetails userDetails) {
-		final String username = extractUsername(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+		final String subject = extractSubject(token);
+		return (subject.equals(subjectOf(userDetails)) && !isTokenExpired(token));
+	}
+
+	private String subjectOf(UserDetails userDetails) {
+		return userDetails instanceof User user ? user.getEmail() : userDetails.getUsername();
 	}
 
 	/**

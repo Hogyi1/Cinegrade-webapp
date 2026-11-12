@@ -3,6 +3,7 @@ package hu.elte.ik.thesis.cinegrade.security;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -41,6 +42,14 @@ public class SecurityConfig {
 
 				// Meghatározzuk, mely végpontokat lehet elérni autentikáció nélkül
 				.authorizeHttpRequests(req -> req
+						.requestMatchers(HttpMethod.GET, "/files/**").permitAll()
+						// /users/me first: the first matching rule wins
+						.requestMatchers("/users/me", "/users/me/**").authenticated()
+						.requestMatchers(HttpMethod.GET, "/users/**").permitAll()
+						// [AI-GENERATED] Posts, tags and search are public to read; downloads need an account.
+						// The download rule must stay above /posts/**.
+						.requestMatchers(HttpMethod.GET, "/posts/*/download/**").authenticated()
+						.requestMatchers(HttpMethod.GET, "/posts", "/posts/**", "/tags", "/search").permitAll()
 						.requestMatchers("/auth/**", "/v2/api-docs", "/v3/api-docs", "/v3/api-docs/**",
 								"/swagger-resources", "/swagger-resources/**", "/configuration/ui",
 								"/configuration/security", "/swagger-ui/**", "/webjars/**", "/swagger-ui.html")

@@ -1,4 +1,4 @@
-package hu.elte.ik.thesis.cinegrade.auth;
+package hu.elte.ik.thesis.cinegrade.auth.dto;
 
 import lombok.*;
 
