@@ -29,6 +29,9 @@ public class StoredFile {
     @Column(unique = true, nullable = false)
     private UUID storageKey;
 
+    @Column(nullable = false)
+    private String contentType;
+
     @Column(nullable = false, length = 120)
     private String fileName;
 

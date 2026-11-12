@@ -55,6 +55,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    volumes:
+      - uploads-data:/app/uploads
     mem_limit: 768m
 
   frontend:
@@ -72,3 +74,6 @@ volumes:
   # Külön adatbázis dev-hez és prod-hoz: a tesztadatok nem keverednek az éles adatokkal
   db-data:
     name: cinegrade_db_${APP_ENV:-dev}
+  # A feltöltött fájlok itt maradnak meg, amikor a backend konténer újraépül
+  uploads-data:
+    name: cinegrade_uploads_${APP_ENV:-dev}

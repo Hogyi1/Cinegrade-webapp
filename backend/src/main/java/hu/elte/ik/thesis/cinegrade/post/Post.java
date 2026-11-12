@@ -4,14 +4,16 @@ import hu.elte.ik.thesis.cinegrade.files.StoredFile;
 import hu.elte.ik.thesis.cinegrade.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import hu.elte.ik.thesis.cinegrade.tag.Tag;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.Check;
-import org.hibernate.annotations.DialectOverride;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -42,8 +44,12 @@ public class Post {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "preview_file_id", nullable = false)
-    private StoredFile previewFile;
+    @JoinColumn(name = "before_file_id", nullable = false)
+    private StoredFile beforeFile;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "after_file_id", nullable = false)
+    private StoredFile afterFile;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cgedit_file_id")
@@ -53,8 +59,30 @@ public class Post {
     @JoinColumn(name = "lut_file_id")
     private StoredFile lutFile;
 
-    private boolean commentsEnabled;
-    private int downloadCount;
+    // [AI-GENERATED] The LUT's target colour space. Only Rec709 for now.
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Builder.Default
+    private ColorSpace colorSpace = ColorSpace.REC709;
+
+    // [AI-GENERATED] Up to 5 of the seeded tags. BatchSize loads the tags of a whole page in one query.
+    @ManyToMany
+    @JoinTable(name = "post_tags",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    @BatchSize(size = 50)
+    @Builder.Default
+    private Set<Tag> tags = new HashSet<>();
+
+    // [AI-GENERATED] Null when not pinned. A user has at most one pinned post.
+    private LocalDateTime pinnedAt;
+
+    // [AI-GENERATED] Kept in step by PostRepository.incrementLikes/decrementLikes, so sorting by popular is cheap.
+    @Column(nullable = false)
+    private long likeCount;
+
+    @Column(nullable = false)
+    private long downloadCount;
 
     @CreatedDate
     @Column(nullable = false, updatable = false)

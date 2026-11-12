@@ -1,34 +1,34 @@
-package hu.elte.ik.thesis.cinegrade.likes;
+package hu.elte.ik.thesis.cinegrade.post.save;
 
 import hu.elte.ik.thesis.cinegrade.post.Post;
 import hu.elte.ik.thesis.cinegrade.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
+// [AI-GENERATED] A post the user bookmarked. Same shape as Like; only the user sees their saves.
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
 @Setter
-@Table(name = "likes", uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"}))
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "saved_posts", uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"}))
 @EntityListeners(AuditingEntityListener.class)
-public class Like {
+public class SavedPost {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id", nullable = false)
     private Post post;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 

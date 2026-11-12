@@ -129,3 +129,6 @@ pnpm-debug.log*
 
 # Misc
 connect.lock
+
+# Local file uploads from running the backend
+/uploads/

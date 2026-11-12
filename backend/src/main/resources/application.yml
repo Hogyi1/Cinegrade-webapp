@@ -58,6 +58,8 @@ spring:
 
   servlet:
     multipart:
+      # Ez alatt a feltöltés a memóriában marad, nem kerül lemezre ellenőrzés előtt
+      file-size-threshold: 10MB
       max-file-size: 50MB
       max-request-size: 60MB
 
@@ -70,10 +72,12 @@ application:
       from: ${MAIL_FROM:no-reply@cinegrade.local}
       frontend:
         activation-url: ${FRONTEND_URL:http://localhost:4200}/activate-account
+        reset-password-url: ${FRONTEND_URL:http://localhost:4200}/forgot-password/reset
   cors:
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:4200}
   files:
     upload-dir: ${FILES_UPLOAD_DIR:uploads}
+  ffprobe-path: ${FFPROBE_PATH:ffprobe}
   max-activation-attempts: ${MAX_ACTIVATION_ATTEMPTS:5}
   secure: ${SECURE:false}
 
