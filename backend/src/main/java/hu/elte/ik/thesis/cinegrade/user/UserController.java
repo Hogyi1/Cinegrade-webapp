@@ -3,6 +3,7 @@ package hu.elte.ik.thesis.cinegrade.user;
 import hu.elte.ik.thesis.cinegrade.auth.RefreshCookieFactory;
 import hu.elte.ik.thesis.cinegrade.post.PostService;
 import hu.elte.ik.thesis.cinegrade.post.dto.PostSummaryResponse;
+import hu.elte.ik.thesis.cinegrade.session.ClientType;
 import org.springframework.data.web.PagedModel;
 import hu.elte.ik.thesis.cinegrade.auth.dto.AuthenticationResponse;
 import hu.elte.ik.thesis.cinegrade.auth.dto.LoginResponse;
@@ -61,11 +62,10 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserProfileResponse> getMyUserProfile(@AuthenticationPrincipal User user) {
+    public ResponseEntity<UserProfileResponse>getMyUserProfile(@AuthenticationPrincipal User user) {
         return ResponseEntity.ok().body(userService.getOwnProfile(user.getEmail()));
     }
 
-    // [AI-GENERATED] The posts the user saved, newest save first. Only ever your own.
     @GetMapping("/me/saved")
     public ResponseEntity<PagedModel<PostSummaryResponse>> getSavedPosts(@AuthenticationPrincipal User user,
                                                                          @RequestParam(defaultValue = "0") int page,
@@ -95,8 +95,10 @@ public class UserController {
     // Logs out every other device: all sessions are revoked and this one gets a new JWT and refresh cookie
     @PutMapping("/me/password")
     public ResponseEntity<AuthenticationResponse> changePassword(@AuthenticationPrincipal User user,
-                                                                 @RequestBody @Valid ChangePasswordRequest request) {
-        LoginResponse result = userService.changePassword(user, request);
+                                                                 @RequestBody @Valid ChangePasswordRequest request,
+                                                                 // [AI-GENERATED] keeps the new session's client (web or desktop app)
+                                                                 @RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
+        LoginResponse result = userService.changePassword(user, request, ClientType.from(userAgent));
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.create(result.refreshToken()))
                 .body(AuthenticationResponse.builder().token(result.jwt()).build());

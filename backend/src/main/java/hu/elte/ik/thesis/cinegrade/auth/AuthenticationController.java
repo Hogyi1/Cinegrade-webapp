@@ -8,6 +8,7 @@ import hu.elte.ik.thesis.cinegrade.auth.dto.RegistrationRequest;
 import hu.elte.ik.thesis.cinegrade.auth.activation.ActivationRequest;
 import hu.elte.ik.thesis.cinegrade.auth.activation.ResendRequest;
 import hu.elte.ik.thesis.cinegrade.auth.reset.ResetPasswordRequest;
+import hu.elte.ik.thesis.cinegrade.session.ClientType;
 import hu.elte.ik.thesis.cinegrade.session.SessionService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -38,8 +39,9 @@ public class AuthenticationController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request) {
-        LoginResponse result = service.authenticate(request);
+    public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid AuthenticationRequest request,
+                                                        @RequestHeader(value = HttpHeaders.USER_AGENT, required = false) String userAgent) {
+        LoginResponse result = service.authenticate(request, ClientType.from(userAgent));
         return ResponseEntity.ok()
                 .header(HttpHeaders.SET_COOKIE, refreshCookie.create(result.refreshToken()))
                 .body(AuthenticationResponse.builder().token(result.jwt()).build());

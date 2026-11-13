@@ -97,12 +97,13 @@ public class AuthenticationService {
         sendValidationEmail(user);
     }
 
-    public LoginResponse authenticate(AuthenticationRequest request) {
+    // [AI-GENERATED] clientType comes from the User-Agent (ClientType.from) and only labels the session
+    public LoginResponse authenticate(AuthenticationRequest request, ClientType clientType) {
         var auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
         var user = (User) auth.getPrincipal();
         String jwt = jwtService.generateToken(Map.of("username", user.getUsername()), user);
-        return new LoginResponse(jwt, sessionService.create(user, ClientType.WEB, null));
+        return new LoginResponse(jwt, sessionService.create(user, clientType, clientType.deviceName()));
     }
 
     @Transactional(noRollbackFor = BusinessException.class)

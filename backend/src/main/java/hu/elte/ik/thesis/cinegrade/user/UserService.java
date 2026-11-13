@@ -223,7 +223,7 @@ public class UserService {
      * NEW_PASSWORD_DOES_NOT_MATCH if newPassword != confirmPassword.
      */
     @Transactional
-    public LoginResponse changePassword(User user, ChangePasswordRequest request) {
+    public LoginResponse changePassword(User user, ChangePasswordRequest request, ClientType clientType) {
         User u = userRepository.findUserByEmail(user.getEmail().toLowerCase(Locale.ROOT))
                 .orElseThrow(() -> new BusinessException(BusinessErrorCodes.USER_NOT_FOUND));
 
@@ -240,7 +240,8 @@ public class UserService {
 
         sessionService.revokeAll(u);
         String jwt = jwtService.generateToken(Map.of("username", u.getUsername()), u);
-        return new LoginResponse(jwt, sessionService.create(u, ClientType.WEB, null));
+        // [AI-GENERATED] The new session keeps the client the password was changed from (web or desktop app)
+        return new LoginResponse(jwt, sessionService.create(u, clientType, clientType.deviceName()));
     }
 
     public List<UserSummaryResponse> searchUsers(String query) {
