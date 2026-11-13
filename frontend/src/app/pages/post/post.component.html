@@ -170,6 +170,10 @@
           @if (downloadError()) {
             <p class="error" role="alert">{{ downloadError() }}</p>
           }
+          <!-- [AI-GENERATED] Desktop app: where the file went -->
+          @if (downloadNotice()) {
+            <p class="hint" role="status">{{ downloadNotice() }}</p>
+          }
         </div>
 
         @if (p.mine && !editing()) {

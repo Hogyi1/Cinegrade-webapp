@@ -20,8 +20,16 @@ import { MAX_TAGS } from '../../shared/tags.store';
 import { parseServerTime } from '../../shared/server-time';
 import { businessErrorCode, errorMessages } from '../../shared/api-error';
 import { MAX_DESCRIPTION, MAX_TITLE } from '../upload/upload.component';
+import {
+  DesktopDownloadEvent,
+  DesktopDownloadRequest,
+  DownloadKind,
+  desktopBridge,
+  downloadFileName,
+  isDesktop,
+} from '../../shared/desktop';
 
-type Kind = 'lut' | 'cgedit';
+type Kind = DownloadKind;
 
 // Same number as BusinessErrorCodes.java. A missing file (326) is a 404 too, handled in download().
 const POST_NOT_FOUND = 321;
@@ -40,6 +48,8 @@ const POST_NOT_FOUND = 321;
   ],
   templateUrl: './post.component.html',
   styleUrl: './post.component.css',
+  // [AI-GENERATED] The desktop app reports downloads back here
+  host: { '(window:cg-desktop)': 'onDesktopEvent($event)' },
 })
 export class PostComponent {
   private readonly api = inject(PostsService);
@@ -60,6 +70,9 @@ export class PostComponent {
 
   readonly downloading = signal<Kind | null>(null);
   readonly downloadError = signal('');
+  // [AI-GENERATED] In the desktop app the file goes through the bridge, not the browser
+  private readonly desktop = isDesktop();
+  readonly downloadNotice = signal('');
 
   // Owner tools
   readonly editing = signal(false);
@@ -119,6 +132,11 @@ export class PostComponent {
     }
     this.downloading.set(kind);
     this.downloadError.set('');
+    this.downloadNotice.set('');
+    if (this.desktop) {
+      this.downloadInApp(p, kind);
+      return;
+    }
     this.http
       .get(`${this.rootUrl}/posts/${p.id}/download/${kind}`, { responseType: 'blob', observe: 'response' })
       .subscribe({
@@ -251,6 +269,45 @@ export class PostComponent {
         }
       },
     });
+  }
+
+  // [AI-GENERATED METHOD]
+  // WebView ignores <a download>, so the app saves the file itself; the answer comes back as a cg-desktop event.
+  private downloadInApp(p: PostDetailResponse, kind: Kind): void {
+    const bridge = desktopBridge();
+    if (!bridge || p.id == null) {
+      this.downloading.set(null);
+      this.downloadError.set('The app is still loading. Try again in a moment.');
+      return;
+    }
+    const request: DesktopDownloadRequest = { postId: p.id, kind, fileName: downloadFileName(p.title, kind) };
+    bridge.download(JSON.stringify(request));
+  }
+
+  // [AI-GENERATED METHOD]
+  onDesktopEvent(event: Event): void {
+    const detail = (event as CustomEvent<DesktopDownloadEvent>).detail;
+    if (detail?.type !== 'download' || detail.postId !== this.post()?.id || detail.kind !== this.downloading()) {
+      return;
+    }
+    this.downloading.set(null);
+    switch (detail.status) {
+      case 'done':
+        this.post.update((cur) => (cur ? { ...cur, downloadCount: (cur.downloadCount ?? 0) + 1 } : cur));
+        // The app also imports a .cgedit into the preset panel
+        this.downloadNotice.set(detail.kind === 'cgedit' ? 'Saved and added to your presets.' : 'LUT saved.');
+        break;
+      case 'cancelled':
+        break;
+      case 'signin':
+        this.downloadError.set('Sign in again to download.');
+        break;
+      case 'offline':
+        this.downloadError.set("Can't reach CineGrade. Check your connection and try again.");
+        break;
+      default:
+        this.downloadError.set("Couldn't download the file. Try again in a moment.");
+    }
   }
 
   private saveFile(res: HttpResponse<Blob>, fallbackName: string): void {
