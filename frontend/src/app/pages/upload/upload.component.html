@@ -1,12 +1,24 @@
 <!-- [AI-GENERATED] -->
 <main class="upload">
   <h1>New post</h1>
-  <p class="intro">Share a grade: the photo before and after, and the LUT or .cgedit file that made it.</p>
+  <!-- [AI-GENERATED] Opened by the desktop app's Share: the files are already filled in -->
+  @if (fromDesktop) {
+    <p class="intro">Your preset is ready to share. Check the photos, add a few tags, and post.</p>
+    @if (draftLoading()) {
+      <p class="hint" role="status"><i class="fas fa-circle-notch fa-spin" aria-hidden="true"></i> Loading the files from the app</p>
+    }
+    @if (draftError()) {
+      <p class="error error--box" role="alert">{{ draftError() }}</p>
+    }
+  } @else {
+    <p class="intro">Share a grade: the photo before and after, and the LUT or .cgedit file that made it.</p>
+  }
 
   <form class="layout" (ngSubmit)="submit()" novalidate>
     <section class="panel">
       <h2>Photos</h2>
-      <div class="pair">
+      <!-- [AI-GENERATED] From the app the files can't be changed here: the app posts the ones it exported -->
+      <div class="pair" [attr.inert]="fromDesktop ? '' : null">
         <app-file-drop
           label="Before"
           hint="The original. JPG or PNG, up to 15 MB"
@@ -38,9 +50,11 @@
         <div class="preview">
           <div class="preview-head">
             <h3>Preview</h3>
-            <button type="button" class="link-btn" (click)="swapImages()">
-              <i class="fa-solid fa-right-left" aria-hidden="true"></i> Swap
-            </button>
+            @if (!fromDesktop) {
+              <button type="button" class="link-btn" (click)="swapImages()">
+                <i class="fa-solid fa-right-left" aria-hidden="true"></i> Swap
+              </button>
+            }
           </div>
           <app-before-after
             class="preview-slider"
@@ -89,8 +103,12 @@
 
       <section class="panel">
         <h2>Files</h2>
-        <p class="hint">At least one. Both are exported from the CineGrade app.</p>
-        <div class="pair">
+        @if (fromDesktop) {
+          <p class="hint">Exported from your preset by the app.</p>
+        } @else {
+          <p class="hint">At least one. Both are exported from the CineGrade app.</p>
+        }
+        <div class="pair" [attr.inert]="fromDesktop ? '' : null">
           <app-file-drop
             label="LUT"
             hint=".cube, Rec709"

@@ -2,13 +2,24 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component, DestroyRef, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PostsService } from '../../services/services/posts.service';
 import { BeforeAfterComponent } from '../../shared/before-after.component';
 import { FileDropComponent } from '../../shared/file-drop.component';
 import { TagPickerComponent } from '../../shared/tag-picker.component';
 import { MAX_TAGS } from '../../shared/tags.store';
 import { businessErrorCode, errorMessages } from '../../shared/api-error';
+import {
+  DesktopPublishEvent,
+  DesktopPublishRequest,
+  SHARE_DRAFT_PARAM,
+  SHARE_DRAFT_VALUE,
+  desktopBridge,
+  isDesktop,
+  parseShareDraft,
+  toFile,
+  waitForBridge,
+} from '../../shared/desktop';
 
 // Same limits as CreatePostRequest.java and FileStorageService.java.
 export const MAX_TITLE = 120;
@@ -31,6 +42,8 @@ type Slot = 'before' | 'after' | 'lut' | 'cgedit';
   imports: [FormsModule, BeforeAfterComponent, FileDropComponent, TagPickerComponent],
   templateUrl: './upload.component.html',
   styleUrl: './upload.component.css',
+  // [AI-GENERATED] The desktop app reports a publish back here
+  host: { '(window:cg-desktop)': 'onDesktopEvent($event)' },
 })
 export class UploadComponent {
   private readonly posts = inject(PostsService);
@@ -69,11 +82,48 @@ export class UploadComponent {
     () => !!this.title().trim() && !!this.before() && !!this.after() && (!!this.lut() || !!this.cgedit()),
   );
 
+  // [AI-GENERATED] Desktop app: the files its preset menu's Share exported
+  readonly fromDesktop =
+    isDesktop() && inject(ActivatedRoute).snapshot.queryParamMap.get(SHARE_DRAFT_PARAM) === SHARE_DRAFT_VALUE;
+  readonly draftLoading = signal(false);
+  readonly draftError = signal('');
+
   constructor() {
     inject(DestroyRef).onDestroy(() => {
       this.revoke(this.beforeUrl());
       this.revoke(this.afterUrl());
     });
+    if (this.fromDesktop) {
+      void this.loadDesktopDraft();
+    }
+  }
+
+  // [AI-GENERATED METHOD]
+  // Fills the form like a person picking the files would, so the same checks apply; tags are left to the user.
+  private async loadDesktopDraft(): Promise<void> {
+    this.draftLoading.set(true);
+    const bridge = await waitForBridge();
+    const draft = parseShareDraft(bridge?.shareDraft());
+    this.draftLoading.set(false);
+    if (!draft) {
+      this.draftError.set("Couldn't load the files from the app. Go back and use Share on the preset again.");
+      return;
+    }
+    try {
+      this.title.set(draft.title.slice(0, MAX_TITLE));
+      this.description.set((draft.description ?? '').slice(0, MAX_DESCRIPTION));
+      this.pickImage('before', toFile(draft.before));
+      this.pickImage('after', toFile(draft.after));
+      if (draft.lut) {
+        this.pickGradeFile('lut', toFile(draft.lut));
+      }
+      if (draft.cgedit) {
+        this.pickGradeFile('cgedit', toFile(draft.cgedit));
+      }
+    } catch {
+      // atob throws on broken base64
+      this.draftError.set("The files from the app couldn't be read. Use Share on the preset again.");
+    }
   }
 
   pickImage(slot: 'before' | 'after', file: File): void {
@@ -123,6 +173,10 @@ export class UploadComponent {
     }
     this.sending.set(true);
     this.errors.set([]);
+    if (this.fromDesktop) {
+      this.publishInApp();
+      return;
+    }
     this.posts
       .createPost({
         body: {
@@ -142,6 +196,43 @@ export class UploadComponent {
           this.errors.set(this.messageFor(err));
         },
       });
+  }
+
+  // [AI-GENERATED METHOD]
+  // The WebView can't send this form's files, so the app posts them; the answer is a 'publish' cg-desktop event
+  private publishInApp(): void {
+    const bridge = desktopBridge();
+    if (!bridge) {
+      this.sending.set(false);
+      this.errors.set(['The app is still loading. Try again in a moment.']);
+      return;
+    }
+    const request: DesktopPublishRequest = {
+      title: this.title().trim(),
+      description: this.description().trim() || undefined,
+      tags: this.tags(),
+    };
+    bridge.publish(JSON.stringify(request));
+  }
+
+  // [AI-GENERATED METHOD]
+  onDesktopEvent(event: Event): void {
+    const detail = (event as CustomEvent<DesktopPublishEvent>).detail;
+    if (detail?.type !== 'publish' || !this.sending()) {
+      return;
+    }
+    if (detail.status === 'done' && detail.postId > 0) {
+      void this.router.navigate(['/posts', detail.postId]);
+      return;
+    }
+    this.sending.set(false);
+    this.errors.set([
+      detail.status === 'signin'
+        ? 'Sign in again to post.'
+        : detail.status === 'offline'
+          ? "Can't reach CineGrade. Check your connection and try again."
+          : "Couldn't publish your post. Try again in a moment.",
+    ]);
   }
 
   private messageFor(err: HttpErrorResponse): string[] {
