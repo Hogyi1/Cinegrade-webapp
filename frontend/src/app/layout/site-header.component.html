@@ -8,8 +8,12 @@
 
   <div class="actions">
     <!-- [AI-GENERATED] -->
-    <a class="nav-link nav-link--about" routerLink="/about" routerLinkActive="nav-link--active">About</a>
-    @if (isLoggedIn()) {
+    <!-- [AI-GENERATED] The About page sells the app, pointless inside it -->
+    @if (!desktop) {
+      <a class="nav-link nav-link--about" routerLink="/about" routerLinkActive="nav-link--active">About</a>
+    }
+    <!-- [AI-GENERATED] No web post form in the desktop app -->
+    @if (isLoggedIn() && !desktop) {
       <a class="nav-link" routerLink="/upload" routerLinkActive="nav-link--active" aria-label="New post">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
         <span class="nav-link-text">Post</span>
@@ -57,8 +61,8 @@
           </div>
         }
       </div>
-    } @else {
-      <!-- [AI-GENERATED] -->
+    } @else if (!desktop) {
+      <!-- [AI-GENERATED] The desktop app has its own Sign in button, which opens /login here -->
       <a class="auth-btn auth-btn--ghost" routerLink="/login">Sign in</a>
       <a class="auth-btn auth-btn--solid" routerLink="/register">Sign up</a>
     }

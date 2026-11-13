@@ -5,6 +5,7 @@ import { CurrentUserService } from '../auth/current-user.service';
 import { UserSearchComponent } from './user-search.component';
 import { TokenService } from '../services/token/token.service';
 import { ThemeService } from '../theme/theme.service';
+import { isDesktop } from '../shared/desktop';
 
 @Component({
   selector: 'app-site-header',
@@ -29,6 +30,8 @@ export class SiteHeaderComponent {
   // [AI-GENERATED]
   readonly avatarUrl = inject(CurrentUserService).avatarUrl;
   readonly isDark = computed(() => this.theme.theme() === 'dark');
+  // [AI-GENERATED] Inside the desktop app: posting and signing in have their own buttons there
+  readonly desktop = isDesktop();
   readonly menuOpen = signal(false);
 
   toggleTheme(): void {

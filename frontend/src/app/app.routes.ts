@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { SiteLayoutComponent } from './layout/site-layout.component';
-import { authGuard, guestGuard } from './auth/auth.guards';
+import { authGuard, desktopHiddenGuard, guestGuard, notDesktopGuard } from './auth/auth.guards';
 
 // [AI-GENERATED] Every page is loaded only when it's first opened (loadComponent),
 // which keeps the first download small.
@@ -46,6 +46,8 @@ export const routes: Routes = [
       {
         path: 'about',
         loadComponent: () => import('./pages/landing/landing.component').then((m) => m.LandingComponent),
+        // [AI-GENERATED] The pitch for the app; inside the app it goes to the feed instead
+        canActivate: [desktopHiddenGuard],
       },
       {
         path: 'users/:username',
@@ -55,7 +57,8 @@ export const routes: Routes = [
       {
         path: 'upload',
         loadComponent: () => import('./pages/upload/upload.component').then((m) => m.UploadComponent),
-        canActivate: [authGuard],
+        // [AI-GENERATED] The desktop app shares from its preset menu instead
+        canActivate: [notDesktopGuard, authGuard],
       },
       {
         path: 'posts/:id',

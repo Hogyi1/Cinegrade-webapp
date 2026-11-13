@@ -24,14 +24,17 @@
         <h2>Explore</h2>
         <ul>
           <li><a routerLink="/">Feed</a></li>
-          <li><a routerLink="/about">About CineGrade</a></li>
-          <li>
-            @if (downloadUrl) {
-              <a [href]="downloadUrl" download>Download for Windows</a>
-            } @else {
-              <span class="soon">Download <em>coming soon</em></span>
-            }
-          </li>
+          <!-- [AI-GENERATED] About and the app download make no sense inside the app -->
+          @if (!desktop) {
+            <li><a routerLink="/about">About CineGrade</a></li>
+            <li>
+              @if (downloadUrl) {
+                <a [href]="downloadUrl" download>Download for Windows</a>
+              } @else {
+                <span class="soon">Download <em>coming soon</em></span>
+              }
+            </li>
+          }
         </ul>
       </section>
 
@@ -41,7 +44,8 @@
           @if (isLoggedIn()) {
             <li><a [routerLink]="['/users', username()]">My profile</a></li>
             <li><a routerLink="/account">Account settings</a></li>
-          } @else {
+          } @else if (!desktop) {
+            <!-- [AI-GENERATED] Hidden in the desktop app, which has its own Sign in button -->
             <li><a routerLink="/login">Sign in</a></li>
             <li><a routerLink="/register">Create an account</a></li>
             <li><a routerLink="/forgot-password">Forgot your password?</a></li>

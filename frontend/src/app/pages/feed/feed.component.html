@@ -109,7 +109,8 @@
           <p>Nothing here yet. Follow a few graders and their posts show up here.</p>
         } @else {
           <p>No one has posted yet. Be the first.</p>
-          @if (isLoggedIn()) {
+          <!-- [AI-GENERATED] The desktop app shares from its preset menu -->
+          @if (isLoggedIn() && !desktop) {
             <a class="cg-btn" routerLink="/upload">New post</a>
           }
         }
@@ -151,13 +152,16 @@
       </section>
     }
 
-    <section class="side-box side-box--app">
-      <h2>Grade your own</h2>
-      <p>CineGrade is a desktop app. Grade on the GPU, export a LUT, and share it here.</p>
-      @if (downloadUrl) {
-        <a class="cg-btn" [href]="downloadUrl" download>Download for Windows</a>
-      }
-      <a class="side-link" routerLink="/about">What is CineGrade?</a>
-    </section>
+    <!-- [AI-GENERATED] Advertises the app, so not shown inside it -->
+    @if (!desktop) {
+      <section class="side-box side-box--app">
+        <h2>Grade your own</h2>
+        <p>CineGrade is a desktop app. Grade on the GPU, export a LUT, and share it here.</p>
+        @if (downloadUrl) {
+          <a class="cg-btn" [href]="downloadUrl" download>Download for Windows</a>
+        }
+        <a class="side-link" routerLink="/about">What is CineGrade?</a>
+      </section>
+    }
   </aside>
 </main>

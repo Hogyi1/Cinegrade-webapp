@@ -16,6 +16,7 @@ import { PAGE_SIZE, PageLoader, Posts, isLastPage } from '../../shared/paged';
 import { businessErrorCode, errorMessages } from '../../shared/api-error';
 // [AI-GENERATED]
 import { toProfileLink } from '../../shared/profile-link';
+import { isDesktop } from '../../shared/desktop';
 
 // Same number as BusinessErrorCodes.java.
 const USER_NOT_FOUND = 316;
@@ -56,6 +57,8 @@ export class ProfileComponent {
     return me !== null && me === this.profile()?.username;
   });
   readonly avatarUrl = computed(() => fileUrl(this.rootUrl, this.profile()?.avatarFileId));
+  // [AI-GENERATED] The desktop app shares from its preset menu, so no "New post" button there
+  readonly desktop = isDesktop();
   readonly initial = computed(() => this.profile()?.username?.charAt(0).toUpperCase() ?? '?');
   readonly links = computed(() => (this.profile()?.links ?? []).map(toProfileLink)); // [AI-GENERATED] platform icon + handle
 

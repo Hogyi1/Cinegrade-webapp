@@ -18,6 +18,7 @@ import { TimeAgoPipe } from '../../shared/time-ago.pipe';
 import { PAGE_SIZE, Posts, isLastPage } from '../../shared/paged';
 import { errorMessages } from '../../shared/api-error';
 import { DESKTOP_DOWNLOAD_URL } from '../../shared/links';
+import { isDesktop } from '../../shared/desktop';
 // [AI-GENERATED]
 import { TagChipsComponent } from '../../shared/tag-chips.component';
 import { TagsStore } from '../../shared/tags.store';
@@ -41,6 +42,8 @@ export class FeedComponent {
 
   readonly isLoggedIn = inject(TokenService).isLoggedIn;
   readonly downloadUrl = DESKTOP_DOWNLOAD_URL;
+  // [AI-GENERATED]
+  readonly desktop = isDesktop();
 
   readonly scope = signal<Scope>('all');
   readonly items = signal<Posts>([]);

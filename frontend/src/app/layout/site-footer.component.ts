@@ -3,6 +3,7 @@ import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { TokenService } from '../services/token/token.service';
 import { DESKTOP_DOWNLOAD_URL } from '../shared/links';
+import { isDesktop } from '../shared/desktop';
 
 const CONTACT_EMAIL = 'cinegrade.webapp@gmail.com';
 
@@ -18,6 +19,8 @@ export class SiteFooterComponent {
   readonly isLoggedIn = this.tokens.isLoggedIn;
   readonly username = this.tokens.username;
   readonly downloadUrl = DESKTOP_DOWNLOAD_URL;
+  // [AI-GENERATED] The desktop app signs in with its own button
+  readonly desktop = isDesktop();
   readonly email = CONTACT_EMAIL;
   readonly reportLink = `mailto:${CONTACT_EMAIL}?subject=${encodeURIComponent('CineGrade: reporting a problem')}`;
   readonly year = new Date().getFullYear();

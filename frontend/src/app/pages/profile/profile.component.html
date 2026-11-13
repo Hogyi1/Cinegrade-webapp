@@ -123,8 +123,13 @@
             <p>Posts you save show up here. Only you can see them.</p>
           } @else if (isMe()) {
             <i class="fa-regular fa-images" aria-hidden="true"></i>
-            <p>Share your first grade.</p>
-            <a class="cg-btn" routerLink="/upload">New post</a>
+            <!-- [AI-GENERATED] In the desktop app: share from the preset menu -->
+            @if (desktop) {
+              <p>Share your first grade from a preset's Share option.</p>
+            } @else {
+              <p>Share your first grade.</p>
+              <a class="cg-btn" routerLink="/upload">New post</a>
+            }
           } @else {
             <i class="fa-regular fa-images" aria-hidden="true"></i>
             <p>{{ p.username }} hasn't posted yet.</p>
