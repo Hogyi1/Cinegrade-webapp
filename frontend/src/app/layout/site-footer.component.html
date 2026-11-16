@@ -10,13 +10,6 @@
       <p class="tagline">
         Colour grade your photos on the GPU, then share the look with other graders.
       </p>
-      <div class="help">
-        <span>Something not working?</span>
-        <a class="report" [href]="reportLink">
-          <i class="fa-solid fa-bug" aria-hidden="true"></i>
-          Report a problem
-        </a>
-      </div>
     </section>
 
     <nav class="links" aria-label="Footer">
@@ -57,8 +50,8 @@
         <h2>Help</h2>
         <ul>
           <li><a [href]="reportLink">Report a problem</a></li>
-          <li><a [href]="'mailto:' + email">Contact us</a></li>
-          <li><a class="email" [href]="'mailto:' + email">{{ email }}</a></li>
+          <li><a [attr.href]="'mailto:' + email">Contact us</a></li>
+          <li><a class="email" [attr.href]="'mailto:' + email">{{ email }}</a></li>
         </ul>
       </section>
     </nav>

@@ -15,7 +15,7 @@ import lombok.Setter;
 public class RegistrationRequest {
 
 	@NotBlank(message = "Username is mandatory")
-	@Pattern(regexp = "^[a-zA-Z0-9_]{3,30}$", message = "Use 3 to 30 letters, numbers or underscores")
+	@Pattern(regexp = "^[a-zA-Z0-9_áéíóöőúüűÁÉÍÓÖŐÚÜŰ]{3,30}$", message = "Use 3 to 30 letters, numbers or underscores")
 	private String username;
 
 	@Email(message = "Email is not formatted")
@@ -30,8 +30,16 @@ public class RegistrationRequest {
 			message = "Password must contain at least 2 numbers"
 	)
 	@Pattern(
-			regexp = "^(?=.*[^a-zA-Z0-9\\s]).*$",
+			regexp = "^(?=.*[A-ZÁÉÍÓÖŐÚÜŰ]).*$",
+			message = "Password must contain at least 1 uppercase letter"
+	)
+	@Pattern(
+			regexp = "^(?=.*[^a-zA-Z0-9_áéíóöőúüűÁÉÍÓÖŐÚÜŰ\\s]).*$",
 			message = "Password must contain at least 1 special character"
+	)
+	@Pattern(
+			regexp = "^\\S+$",
+			message = "Password cannot contain whitespace"
 	)
 	private String password;
 }
